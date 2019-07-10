@@ -73,13 +73,13 @@ const main = async () => {
 
   app.get(
     '/oauth/google',
-    passport.authenticate('google', { session: false, failureRedirect: 'http://localhost:3000/' }),
+    passport.authenticate('google', { session: false, failureRedirect: 'http://localhost:3000/authenticate' }),
     (req, res, next) => {
       if (req.user.userDetails.id && req.session) {
         req.session.userId = req.user.userDetails.id;
         req.session.accessToken = req.user.userDetails.accessToken;
         req.session.refreshToken = req.user.userDetails.refreshToken;
-        res.redirect('http://localhost:3000/app');
+        res.redirect('http://localhost:3000/app/estates/');
       } else {
         next();
       }

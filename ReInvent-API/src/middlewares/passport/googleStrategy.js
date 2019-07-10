@@ -21,18 +21,25 @@ export const initGoogleStrategy = passport => passport.use(
         });
       } else {
         const { Op } = Sequelize;
+        let mockRole = 'user';
+        if (email.includes('cali.armut' || 'elliott')) {
+          mockRole = 'admin';
+        }
+        if (email.includes('manager')) {
+          mockRole = 'manager';
+        }
         return models.db.transaction((transaction) =>
           models.User.findOrCreate({
             where: {
               googleId: { [Op.eq]: profile.id }
-              // email: { [Op.eq]: profile.email }
             },
             defaults: {
               googleId: profile.id,
               email: email,
               avatar: picture,
               firstName: given_name,
-              lastName: family_name
+              lastName: family_name,
+              role: mockRole
             },
             transaction
           }).spread((userResult, created) => {

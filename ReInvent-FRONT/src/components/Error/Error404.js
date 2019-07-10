@@ -16,7 +16,7 @@ const Error404 = ({ classes }) => (
       <Typography variant='h1' color='primary' className={classnames(classes.textRow, classes.errorCode)}>404</Typography>
       <Typography variant='h5' color='primary' className={classes.textRow}>Oops. Looks like the page you're looking for no longer exists</Typography>
       <Typography variant='h6' color='textSecondary' className={classnames(classes.textRow, classes.safetyText)}>But we're here to bring you back to safety</Typography>
-      <Button variant='contained' color='primary' component={Link} to='/' size='large' className={classes.backButton}>Back to Home</Button>
+      <Button variant='contained' color='primary' component={Link} to='/app/estates' size='large' className={classes.backButton}>Back to Home</Button>
     </Paper>
   </Grid>
 );

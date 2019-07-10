@@ -5,7 +5,7 @@ export default gql`
     id: Int!
     name: String!
     cover: String!
-    officeId: Int!
+    officeId: Int
   }
 
   type Query {
@@ -14,7 +14,7 @@ export default gql`
 
   type Mutation {
     createEstate(input: CreateEstateInput!): EstateResponseStatus!
-    # updateEstate(input: UpdateEstateInput!): EstateResponseStatus!
+    updateEstate(input: UpdateEstateInput!): EstateResponseStatus!
     archiveEstate(id: Int!): EstateResponseStatus!
     deleteEstate(id: Int!): EstateResponseStatus!
   }
@@ -30,8 +30,9 @@ export default gql`
     officeId: String!
   }
 
-  # input UpdateEstateInput {
-  #   name: String
-  #   cover: String
-  # }
+  input UpdateEstateInput {
+    name: String
+    cover: String
+    estateId: Int!
+  }
 `;

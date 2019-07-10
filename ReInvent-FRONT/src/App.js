@@ -26,7 +26,7 @@ function App () {
   return (
     <Router>
       <Switch>
-        <Route exact path='/login' component={Auth} />
+        <Route exact path='/authenticate' component={Auth} />
         <Route exact path='/' render={() => <Redirect to='/app' />} />
         <PrivateRoute path='/app' component={Dashboard} />
         <Route component={Error404} />

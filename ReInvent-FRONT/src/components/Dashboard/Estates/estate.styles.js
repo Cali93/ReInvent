@@ -26,6 +26,11 @@ export const useEstateStyles = makeStyles(theme => ({
   cardContent: {
     flexGrow: 1
   },
+  cardActions: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   footer: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6)

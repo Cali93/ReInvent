@@ -29,5 +29,8 @@ export const permissions = shield({
   Query: {
     getUser: isAuthenticated,
     allEstates: isAdminOrManager
+  },
+  Mutation: {
+    deleteEstate: isAdminOrManager
   }
 });

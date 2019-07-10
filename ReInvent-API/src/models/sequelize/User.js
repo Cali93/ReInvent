@@ -5,13 +5,11 @@ export default (db, DataTypes) => {
     avatar: DataTypes.TEXT,
     firstName: {
       type: DataTypes.STRING,
-      field: 'first_name',
-      allowNull: false
+      field: 'first_name'
     },
     lastName: {
       type: DataTypes.STRING,
-      field: 'last_name',
-      allowNull: false
+      field: 'last_name'
     },
     gender: DataTypes.STRING,
     googleId: DataTypes.STRING,

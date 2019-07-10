@@ -4,10 +4,10 @@ export default gql`
   type User {
     id: Int!
     email: String!
-    avatar: String!
+    avatar: String
     googleId: String
-    firstName: String!
-    lastName: String!
+    firstName: String
+    lastName: String
     gender: String!
   }
 
