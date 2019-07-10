@@ -2,21 +2,21 @@ import React, { useState } from 'react';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 
-export default function ConfirmPopover ({ children, confirmAction, onConfirmation }) {
+const ConfirmPopover = ({ children, confirmAction, onConfirmation }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
-  function handleClick (event) {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-  }
+  };
 
-  function handleClose () {
+  const handleClose = () => {
     setAnchorEl(null);
-  }
+  };
 
-  function handleConfirm () {
+  const handleConfirm = () => {
     onConfirmation();
     return handleClose();
-  }
+  };
 
   const open = Boolean(anchorEl);
   const id = open ? 'confirmation-popover' : undefined;
@@ -51,4 +51,6 @@ export default function ConfirmPopover ({ children, confirmAction, onConfirmatio
       </Popover>
     </div>
   );
-}
+};
+
+export default ConfirmPopover;

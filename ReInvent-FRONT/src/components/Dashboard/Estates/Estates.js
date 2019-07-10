@@ -19,24 +19,24 @@ import { Mutation } from 'react-apollo';
 import EditEstateDialog from './EditEstateDialog';
 import CreateEstateDialog from './CreateEstateDialog';
 
-export default function Estates () {
+const Estates = () => {
   const classes = useEstateStyles();
   const [isEditDialogOpen, setToggleEditDialog] = useState(false);
   const [isCreateDialogOpen, setToggleCreateDialog] = useState(false);
   const [estate, setEstate] = useState({ estateId: null, name: '', cover: '' });
   const { data, error, loading } = useQuery(GET_ALL_ESTATES);
 
-  function handleEditEstate (estateId, name, cover) {
+  const handleEditEstate = (estateId, name, cover) => {
     setEstate({ estateId, name, cover });
     setToggleEditDialog(prevState => !prevState);
-  }
+  };
 
-  function handleCreateEstate () {
+  const handleCreateEstate = () => {
     setToggleCreateDialog(prevState => !prevState);
-  }
+  };
 
   if (loading || !data.allEstates) {
-    return <div>Loading...</div>;
+    return <div />;
   }
   if (error) {
     return <div>Oops an error has occured...</div>;
@@ -147,4 +147,6 @@ export default function Estates () {
       </Container>
     </>
   );
-}
+};
+
+export default Estates;
