@@ -6,6 +6,7 @@ import './App.css';
 import { useQuery } from 'react-apollo-hooks';
 import gql from 'graphql-tag';
 import Auth from './components/Auth/Auth';
+import Dashboard from './components/Dashboard/Dashboard';
 
 export const GET_CURRENT_USER = gql`
   query getUser {
@@ -41,7 +42,8 @@ function App () {
   return (
     <Router>
       <Switch>
-        <Route exact path='/authenticate' component={Auth} />
+        <Route exact path='/' component={Auth} />
+        <Route exact path='/app/dashboard' component={Dashboard} />
       </Switch>
     </Router>
   );

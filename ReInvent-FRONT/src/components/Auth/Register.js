@@ -86,7 +86,7 @@ export const Register = withStyles(styles)(({ classes, handleTabChange }) => {
               {authError && (
                 <Fade in={authError}>
                   <Typography color='error' className={classes.errorMessage}>
-                                Something is wrong with your informations :(
+                    Something is wrong with your informations :(
                   </Typography>
                 </Fade>
               )}
