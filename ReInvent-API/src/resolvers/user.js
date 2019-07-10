@@ -5,7 +5,12 @@ export default {
   Query: {
     getUser: async (_parent, _args, { models, req }) => {
       try {
-        const user = await models.User.scope('withoutPassword').findOne({ where: { id: req.session.userId }, raw: true });
+        const user = await models.User.scope('withoutPassword').findOne(
+          {
+            where: { id: req.session.userId },
+            raw: true
+          }
+        );
         return {
           ok: true,
           user

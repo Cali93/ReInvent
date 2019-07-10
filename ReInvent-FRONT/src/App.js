@@ -10,8 +10,6 @@ import { PrivateRoute } from './components/common/PrivateRoute/PrivateRoute';
 import { GET_CURRENT_USER } from './graphql/auth';
 
 function App () {
-  const todos = useStoreState(state => state.todos.items);
-  const addTodo = useStoreActions(actions => actions.todos.add);
   const setUser = useStoreActions(actions => actions.user.setUser);
 
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
@@ -22,7 +20,6 @@ function App () {
     setUser(data.getUser.user);
   }
 
-  // !todos.includes('Learn Easy Peasy') && addTodo('Learn Easy Peasy');
   return (
     <Router>
       <Switch>

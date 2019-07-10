@@ -11,10 +11,13 @@ import {
 
 import { TextFieldGroup } from '../../common/TextFieldGroup/TextFieldGroup';
 import SubmitOrCancel from '../../common/SubmitOrCancel/SubmitOrCancel';
-import { UPDATE_ESTATE, GET_ALL_ESTATES } from '../../../graphql/estates';
+import { GET_ALL_ESTATES, CREATE_ESTATE } from '../../../graphql/estates';
+import { useStoreState } from 'easy-peasy';
 
-const EditEstateDialog = ({ estate, isOpen, toggleDialog }) => {
-  const [updateError, setUpdateError] = useState(false);
+const CreateEstateDialog = ({ isOpen, toggleDialog }) => {
+  const [createError, setCreateError] = useState(false);
+  const user = useStoreState(state => state.user.user);
+
   const validateFields = Yup.object().shape({
     name: Yup.string()
       .required('Name is required'),
@@ -22,59 +25,58 @@ const EditEstateDialog = ({ estate, isOpen, toggleDialog }) => {
       .required('Cover is required')
   });
 
-  const onSubmit = async (fields, updateEstate) => {
-    if (updateEstate) {
+  const onSubmit = async (fields, form, createEstate) => {
+    if (createEstate) {
       try {
-        const updateEstateResponse = await updateEstate({
+        const createEstateResponse = await createEstate({
           variables: {
             input: {
               ...fields,
-              estateId: estate.estateId
+              officeId: user.officeId
             }
           },
           refetchQueries: [{ query: GET_ALL_ESTATES }]
         });
-        const { data } = updateEstateResponse;
-        const hasData = data && data.updateEstate;
-        const isUpdateOk = hasData && data.updateEstate.ok;
-        const hasUpdateErrors =
-          hasData && data.updateEstate.errors && data.updateEstate.errors.length > 0;
+        const { data } = createEstateResponse;
+        const hasData = data && data.createEstate;
+        const isCreateOk = hasData && data.createEstate.ok;
+        const hasCreateErrors =
+          hasData && data.createEstate.errors && data.createEstate.errors.length > 0;
 
-        if (hasUpdateErrors || !isUpdateOk) {
-          return setUpdateError(true);
+        if (hasCreateErrors || !isCreateOk) {
+          return setCreateError(true);
         }
 
-        if (isUpdateOk) {
-          return toggleDialog();
+        if (isCreateOk) {
+          form.resetForm();
+          return true;
         }
       } catch (err) {
-        return setUpdateError(true);
+        return setCreateError(true);
       }
     }
   };
   return (
     <Dialog
       open={isOpen}
-      onClose={() => toggleDialog()}
+      onClose={toggleDialog}
       aria-labelledby='form-dialog-title'
     >
       <DialogContent>
-        <Mutation mutation={UPDATE_ESTATE}>
-          {(updateEstate, { loading }) => (
+        <Mutation mutation={CREATE_ESTATE}>
+          {(createEstate, { loading }) => (
             <Formik
               initialValues={{
-                name: estate.name,
-                cover: estate.cover
+                name: '',
+                cover: ''
               }}
               validationSchema={validateFields}
-              onSubmit={fields => onSubmit(fields, updateEstate)}
+              onSubmit={(fields, form) => onSubmit(fields, form, createEstate)}
               render={({ errors, touched, handleSubmit, handleReset }) => (
                 <Form onSubmit={handleSubmit}>
-                  <Typography variant='h3'>
-                    Edit estate informations
-                  </Typography>
-                  {updateError && (
-                    <Fade in={updateError}>
+                  <Typography variant='h3'>Create estate</Typography>
+                  {createError && (
+                    <Fade in={createError}>
                       <Typography color='error'>
                         Something went wrong while updating this estate :(
                       </Typography>
@@ -111,8 +113,7 @@ const EditEstateDialog = ({ estate, isOpen, toggleDialog }) => {
                     errors={errors}
                     loading={loading}
                     resetForm={() => {
-                      handleReset();
-                      return toggleDialog();
+                      return handleReset();
                     }}
                   />
                 </Form>
@@ -120,9 +121,10 @@ const EditEstateDialog = ({ estate, isOpen, toggleDialog }) => {
             />
           )}
         </Mutation>
+        ;
       </DialogContent>
     </Dialog>
   );
 };
 
-export default EditEstateDialog;
+export default CreateEstateDialog;

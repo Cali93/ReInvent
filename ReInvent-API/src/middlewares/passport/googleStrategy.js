@@ -1,6 +1,7 @@
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import Sequelize from 'sequelize';
 import models from '../../models/sequelize';
+import { pickRandomItem } from '../../utils/helpers';
 
 // Use the GoogleStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
@@ -28,7 +29,7 @@ export const initGoogleStrategy = passport => passport.use(
         if (email.includes('manager')) {
           mockRole = 'manager';
         }
-        return models.db.transaction((transaction) =>
+        return models.db.transaction(transaction =>
           models.User.findOrCreate({
             where: {
               googleId: { [Op.eq]: profile.id }
@@ -39,6 +40,7 @@ export const initGoogleStrategy = passport => passport.use(
               avatar: picture,
               firstName: given_name,
               lastName: family_name,
+              officeId: pickRandomItem([1, 2, 3, 4]),
               role: mockRole
             },
             transaction
@@ -46,7 +48,8 @@ export const initGoogleStrategy = passport => passport.use(
             const userDetails = userResult.get({ plain: true });
             if (!created && !userResult.id) {
               done(null, false, {
-                message: 'An error occured while setting up your account'
+                message:
+                  'An error occured while setting up your account'
               });
             }
             return done(null, {

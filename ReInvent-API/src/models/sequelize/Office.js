@@ -3,17 +3,8 @@ export default (db, DataTypes) => {
     name: DataTypes.STRING,
     country: DataTypes.STRING,
     cover: DataTypes.TEXT,
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
-      required: true,
-      allowNull: false,
-      validate: {
-        isEmail: {
-          args: true,
-          msg: 'Invalid email'
-        }
-      }
+    emails: {
+      type: DataTypes.JSON
     }
   });
 

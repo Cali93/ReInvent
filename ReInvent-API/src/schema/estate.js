@@ -3,8 +3,8 @@ import { gql } from 'apollo-server-express';
 export default gql`
   type Estate {
     id: Int!
-    name: String!
-    cover: String!
+    name: String
+    cover: String
     officeId: Int
   }
 
@@ -27,7 +27,7 @@ export default gql`
   input CreateEstateInput {
     name: String!
     cover: String!
-    officeId: String!
+    officeId: Int!
   }
 
   input UpdateEstateInput {

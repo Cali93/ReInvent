@@ -4,10 +4,12 @@ export default gql`
   type User {
     id: Int!
     email: String!
+    role: String!
     avatar: String
     googleId: String
     firstName: String
     lastName: String
+    officeId: Int
     gender: String!
   }
 

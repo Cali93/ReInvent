@@ -10,7 +10,7 @@ const Error404 = ({ classes }) => (
   <Grid container className={classes.container}>
     <div className={classes.logotype}>
       <img className={classes.logotypeIcon} src={logo} alt='logo' />
-      <Typography variant='h3' color='white' className={classes.logotypeText}>ReInvent</Typography>
+      <Typography variant='h3' className={classes.logotypeText}>ReInvent</Typography>
     </div>
     <Paper classes={{ root: classes.paperRoot }}>
       <Typography variant='h1' color='primary' className={classnames(classes.textRow, classes.errorCode)}>404</Typography>

@@ -34,3 +34,15 @@ export const UPDATE_ESTATE = gql`
     }
   }
 `;
+
+export const CREATE_ESTATE = gql`
+  mutation($input: CreateEstateInput!) {
+    createEstate(input: $input) {
+      ok
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;

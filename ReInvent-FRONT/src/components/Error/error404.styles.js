@@ -14,7 +14,7 @@ export const styles = theme => ({
   logotype: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing.unit * 12,
+    marginBottom: theme.spacing(12),
     [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
@@ -22,25 +22,25 @@ export const styles = theme => ({
   logotypeText: {
     fontWeight: 500,
     color: theme.palette.secondary.main,
-    marginLeft: theme.spacing.unit * 2
+    marginLeft: theme.spacing(2)
   },
   logotypeIcon: {
     width: 70,
-    marginRight: theme.spacing.unit * 2
+    marginRight: theme.spacing(2)
   },
   paperRoot: {
     boxShadow: theme.customShadows.widgetDanger,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    paddingTop: theme.spacing.unit * 8,
-    paddingBottom: theme.spacing.unit * 8,
-    paddingLeft: theme.spacing.unit * 6,
-    paddingRight: theme.spacing.unit * 6,
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8),
+    paddingLeft: theme.spacing(6),
+    paddingRight: theme.spacing(6),
     maxWidth: 404
   },
   textRow: {
-    marginBottom: theme.spacing.unit * 10,
+    marginBottom: theme.spacing(10),
     textAlign: 'center'
   },
   errorCode: {

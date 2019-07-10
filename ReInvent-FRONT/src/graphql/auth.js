@@ -8,6 +8,8 @@ export const GET_CURRENT_USER = gql`
         id
         firstName
         lastName
+        role
+        officeId
         email
       }
       errors {
@@ -26,6 +28,9 @@ export const LOGIN_USER = gql`
         id
         firstName
         lastName
+        officeId
+        role
+        email
       }
       errors {
         path

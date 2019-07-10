@@ -52,7 +52,7 @@ export default (db, DataTypes) => {
   });
 
   User.associate = (models) => {
-    User.belongsTo(models.Office);
+    User.belongsTo(models.Office, { foreignKey: 'officeId' });
   };
 
   return User;

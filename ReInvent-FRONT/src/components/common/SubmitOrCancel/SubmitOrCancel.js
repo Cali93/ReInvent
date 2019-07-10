@@ -7,7 +7,7 @@ const SubmitOrCancel = ({ onSubmit, errors, loading, resetForm }) => {
   const classes = useSubmitOrCancelStyles();
   return (
     <div className={classes.formButtons}>
-      <Button variant='outlined' color='primary' size='large' className={classes.cancelButton}>
+      <Button variant='outlined' color='primary' size='large' className={classes.cancelButton} onClick={resetForm}>
         Cancel
       </Button>
       {loading ? (

@@ -17,16 +17,22 @@ import { GET_ALL_ESTATES, DELETE_ESTATE } from '../../../graphql/estates';
 import ConfirmPopover from '../../common/ConfirmPopover/ConfirmPopover';
 import { Mutation } from 'react-apollo';
 import EditEstateDialog from './EditEstateDialog';
+import CreateEstateDialog from './CreateEstateDialog';
 
 export default function Estates () {
   const classes = useEstateStyles();
   const [isEditDialogOpen, setToggleEditDialog] = useState(false);
+  const [isCreateDialogOpen, setToggleCreateDialog] = useState(false);
   const [estate, setEstate] = useState({ estateId: null, name: '', cover: '' });
   const { data, error, loading } = useQuery(GET_ALL_ESTATES);
 
   function handleEditEstate (estateId, name, cover) {
     setEstate({ estateId, name, cover });
     setToggleEditDialog(prevState => !prevState);
+  }
+
+  function handleCreateEstate () {
+    setToggleCreateDialog(prevState => !prevState);
   }
 
   if (loading || !data.allEstates) {
@@ -61,13 +67,12 @@ export default function Estates () {
           <div className={classes.heroButtons}>
             <Grid container spacing={2} justify='center'>
               <Grid item>
-                <Button variant='contained' color='primary'>
-                  Main call to action
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button variant='outlined' color='primary'>
-                  Secondary action
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={handleCreateEstate}
+                >
+                  Create an estate
                 </Button>
               </Grid>
             </Grid>
@@ -79,6 +84,12 @@ export default function Estates () {
           isOpen={isEditDialogOpen}
           toggleDialog={setToggleEditDialog}
           estate={estate}
+        />
+      )}
+      {isCreateDialogOpen && (
+        <CreateEstateDialog
+          isOpen={isCreateDialogOpen}
+          toggleDialog={handleCreateEstate}
         />
       )}
       <Container className={classes.cardGrid} maxWidth='md'>

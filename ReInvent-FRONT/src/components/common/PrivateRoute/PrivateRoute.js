@@ -8,7 +8,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => (
   <Query query={GET_CURRENT_USER}>
     {({ loading, error, data }) => {
       if (loading) return <div />;
-      if (error) return <Redirect to='/login' />;
+      if (error) return <Redirect to='/authenticate' />;
       return (
         <Route
           {...rest}
@@ -16,7 +16,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => (
             data && data.getUser && data.getUser.ok && data.getUser.user && data.getUser.user.id ? (
               <Component {...props} />
             ) : (
-              <Redirect to='/login' />
+              <Redirect to='/authenticate' />
             )
           }
         />

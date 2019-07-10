@@ -16,9 +16,9 @@ export default {
     })
   },
   Mutation: {
-    createEstate: async (parent, args, { models, isAuth }) => {
+    createEstate: async (parent, { input }, { models }) => {
       try {
-        isAuth && await models.Estate.create(args);
+        await models.Estate.create(input);
         return {
           ok: true
         };
