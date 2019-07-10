@@ -18,7 +18,7 @@ import cn from 'classnames';
 
 import google from '../../assets/google.svg';
 import { styles } from './auth.styles';
-import { TextFieldGroup } from '../common/TextFieldGroup';
+import { TextFieldGroup } from '../common/TextFieldGroup/TextFieldGroup';
 import { CREATE_USER } from '../../graphql/auth';
 import { isEmptyObject } from '../../utils/helpers';
 import { genders } from '../../utils/staticLists';

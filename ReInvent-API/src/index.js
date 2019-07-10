@@ -73,13 +73,13 @@ const main = async () => {
 
   app.get(
     '/oauth/google',
-    passport.authenticate('google', { session: false }),
+    passport.authenticate('google', { session: false, failureRedirect: 'http://localhost:3000/' }),
     (req, res, next) => {
       if (req.user.userDetails.id && req.session) {
         req.session.userId = req.user.userDetails.id;
         req.session.accessToken = req.user.userDetails.accessToken;
         req.session.refreshToken = req.user.userDetails.refreshToken;
-        res.redirect('http://localhost:3000/');
+        res.redirect('http://localhost:3000/app');
       } else {
         next();
       }
@@ -119,7 +119,7 @@ const main = async () => {
 
   server.applyMiddleware({ app, cors: corsOptions });
   // Makes sure the tables exists
-  await models.db.sync({ force: true });
+  await models.db.sync();
 
   app.listen({ port }, () => {
     console.log(`🚀 Server ready on port: ${port} 🚀`);

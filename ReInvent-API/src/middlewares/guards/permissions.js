@@ -11,15 +11,15 @@ const isAuthenticated = rule()(async (parent, args, { models, req }, info) => {
   }
 });
 
-const isAdmin = rule()(async (parent, args, { models, req }, info) => {
+const isAdminOrManager = rule()(async (parent, args, { models, req }, info) => {
   if (req.session && req.session.userId) {
     return models.User.scope('withoutPassword').findOne({
       where: {
         id: { [Op.eq]: req.session.userId },
-        role: { [Op.eq]: 'admin' }
+        role: { [Op.or]: ['admin', 'manager'] }
       },
       raw: true
-    }).then(user => user.role === 'admin');
+    }).then(user => !!user.id);
   } else {
     return false;
   }
@@ -27,6 +27,7 @@ const isAdmin = rule()(async (parent, args, { models, req }, info) => {
 
 export const permissions = shield({
   Query: {
-    getUser: isAuthenticated
+    getUser: isAuthenticated,
+    allEstates: isAdminOrManager
   }
 });

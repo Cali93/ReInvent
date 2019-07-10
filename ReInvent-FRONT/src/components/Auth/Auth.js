@@ -10,7 +10,7 @@ import {
 import Login from './Login';
 import { Register } from './Register';
 import { styles } from './auth.styles';
-import logo from '../../assets/logo.svg';
+import logo from '../../assets/logo.png';
 
 const Auth = ({ classes }) => {
   const [activeTabId, setActiveTabId] = useState(0);

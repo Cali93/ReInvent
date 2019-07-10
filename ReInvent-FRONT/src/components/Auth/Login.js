@@ -13,7 +13,7 @@ import {
 
 import google from '../../assets/google.svg';
 import { styles } from './auth.styles';
-import { TextFieldGroup } from '../common/TextFieldGroup';
+import { TextFieldGroup } from '../common/TextFieldGroup/TextFieldGroup';
 import { LOGIN_USER } from '../../graphql/auth';
 import { isEmptyObject } from '../../utils/helpers';
 
@@ -45,7 +45,7 @@ const Login = ({ classes, history }) => {
         }
 
         if (isLoginOk && data.login.user.id) {
-          return history.push('/');
+          return history.push('/app/estates');
         }
       } catch (err) {
         return setAuthError(true);

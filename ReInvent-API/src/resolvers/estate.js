@@ -5,7 +5,7 @@ const { Op } = Sequelize;
 
 export default {
   Query: {
-    allEstates: (parent, args, { models, isAuth }) => isAuth && models.Estate.findAll({
+    allEstates: (parent, args, { models }) => models.Estate.findAll({
       where: {
         archivedAt: { [Op.eq]: null }
       }
