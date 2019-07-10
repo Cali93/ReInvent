@@ -46,6 +46,7 @@ export default gql`
   input RegisterInput {
     firstName: String!
     lastName: String!
+    avatar: String!
     gender: String!
     email: String!
     password: String!

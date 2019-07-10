@@ -55,6 +55,14 @@ export const styles = theme => ({
     fontWeight: 400,
     fontSize: 18
   },
+  genderGroup: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  gendersContainer: {
+    marginTop: '15px'
+  },
   greeting: {
     fontWeight: 500,
     textAlign: 'center',

@@ -14,10 +14,7 @@ import logo from '../../assets/logo.svg';
 
 const Auth = ({ classes }) => {
   const [activeTabId, setActiveTabId] = useState(0);
-  const handleTabChange = (e, tabId) => {
-    e.preventDefault();
-    setActiveTabId(tabId);
-  };
+  const handleTabChange = (_e, tabId) => setActiveTabId(tabId);
 
   return (
     <Grid container className={classes.container}>
