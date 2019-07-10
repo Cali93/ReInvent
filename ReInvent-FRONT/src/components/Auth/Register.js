@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Mutation } from 'react-apollo';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -7,6 +7,7 @@ import {
   Typography,
   CircularProgress,
   withStyles,
+  Fade,
   FormControlLabel,
   FormLabel,
   RadioGroup,
@@ -23,6 +24,7 @@ import { isEmptyObject } from '../../utils/helpers';
 import { genders } from '../../utils/staticLists';
 
 export const Register = withStyles(styles)(({ classes, handleTabChange }) => {
+  const [authError, setAuthError] = useState(false);
   const validateFields = Yup.object().shape({
     firstName: Yup.string().required('First Name is required'),
     lastName: Yup.string().required('Last Name is required'),
@@ -32,21 +34,29 @@ export const Register = withStyles(styles)(({ classes, handleTabChange }) => {
       .email('Email is invalid')
       .required('Email is required'),
     password: Yup.string()
-      .min(8, 'Password must be at least 8 characters')
+      .min(7, 'Password must be at least 8 characters')
       .required('Password is required')
   });
 
   const onSubmit = async (fields, register) => {
-    const registerResponse = await register({
-      variables: {
-        input: fields
+    try {
+      const registerResponse = await register({
+        variables: {
+          input: fields
+        }
+      });
+      const { data } = registerResponse;
+      const hasData = data && data.register;
+      const isRegisterOk = hasData && data.register.ok;
+      const hasRegisterErrors = hasData && data.register.errors && data.register.errors.length > 0;
+      if (hasRegisterErrors || !isRegisterOk) {
+        return setAuthError(true);
       }
-    });
-
-    const { data } = registerResponse;
-
-    if (data.register.ok) {
-      return handleTabChange(undefined, 0);
+      if (isRegisterOk && data.register.user.id) {
+        return handleTabChange(undefined, 0);
+      }
+    } catch (err) {
+      return setAuthError(true);
     }
   };
 
@@ -70,9 +80,16 @@ export const Register = withStyles(styles)(({ classes, handleTabChange }) => {
             handleSubmit
           }) => (
             <Form onSubmit={handleSubmit}>
-              <Typography variant='h3' className={classes.subGreeting}>
+              <Typography variant='h3' className={classes.tabContentTitle}>
                 Create your account
               </Typography>
+              {authError && (
+                <Fade in={authError}>
+                  <Typography color='error' className={classes.errorMessage}>
+                                Something is wrong with your informations :(
+                  </Typography>
+                </Fade>
+              )}
               <Field
                 name='gender'
                 render={({ field, form }) => (

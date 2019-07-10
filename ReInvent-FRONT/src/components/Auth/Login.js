@@ -1,230 +1,148 @@
-import React, { Component } from "react";
-import { Grid, Divider, Button, Typography, CircularProgress, Fade, withStyles } from "@material-ui/core";
-import Lock from "@material-ui/icons/Lock";
-import Mail from "@material-ui/icons/Mail";
-import { Mutation } from "react-apollo";
-import gql from "graphql-tag";
-import { Link, withRouter } from "react-router-dom";
-import { TextFieldGroup } from "../common/TextFieldGroup";
-// import logo from './logo.svg';
+import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
+import { Mutation } from 'react-apollo';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import {
+  Button,
+  Typography,
+  CircularProgress,
+  withStyles,
+  Fade
+} from '@material-ui/core';
+
 import google from '../../assets/google.svg';
 import { styles } from './auth.styles';
+import { TextFieldGroup } from '../common/TextFieldGroup';
+import { LOGIN_USER } from '../../graphql/auth';
+import { isEmptyObject } from '../../utils/helpers';
 
-const login = gql`
-  mutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      ok
-      user {
-        id
-        username
-        email
-      }
-      errors {
-        path
-        message
+const Login = ({ classes, history }) => {
+  const [authError, setAuthError] = useState(false);
+  const validateFields = Yup.object().shape({
+    email: Yup.string()
+      .email('Email is invalid')
+      .required('Email is required'),
+    password: Yup.string()
+      .min(8, 'Password must be at least 8 characters')
+      .required('Password is required')
+  });
+
+  const onSubmit = async (fields, login) => {
+    if (login) {
+      try {
+        const loginResponse = await login({
+          variables: fields
+        });
+        const { data } = loginResponse;
+        const hasData = data && data.login;
+        const isLoginOk = hasData && data.login.ok;
+        const hasLoginErrors =
+          hasData && data.login.errors && data.login.errors.length > 0;
+
+        if (hasLoginErrors || !isLoginOk) {
+          return setAuthError(true);
+        }
+
+        if (isLoginOk && data.login.user.id) {
+          return history.push('/');
+        }
+      } catch (err) {
+        return setAuthError(true);
       }
     }
-  }
-`;
-
-
-// import React from 'react';
-
-// export const Login = () => {
-//   return (
-//     <Formik
-//       initialValues={{
-//           firstName: '',
-//           lastName: '',
-//           gender: '',
-//           avatar: '',
-//           email: '',
-//           password: '',
-//           confirmPassword: ''
-//       }}
-//       validationSchema={Yup.object().shape({
-//           firstName: Yup.string()
-//               .required('First Name is required'),
-//           lastName: Yup.string()
-//               .required('Last Name is required'),
-//           email: Yup.string()
-//               .email('Email is invalid')
-//               .required('Email is required'),
-//           password: Yup.string()
-//               .min(6, 'Password must be at least 6 characters')
-//               .required('Password is required'),
-//           confirmPassword:  Yup.string()
-//               .oneOf([Yup.ref('password'), null], 'Passwords must match')
-//               .required('Confirm Password is required')
-//       })}
-//       onSubmit={fields => {
-//           alert('SUCCESS!! :-)\n\n' + JSON.stringify(fields, null, 4))
-//       }}
-//       render={({ errors, status, touched }) => (
-//           <Form>
-//               <div className="form-group">
-//                   <label htmlFor="firstName">First Name</label>
-//                   <Field name="firstName" type="text" className={'form-control' + (errors.firstName && touched.firstName ? ' is-invalid' : '')} />
-//                   <ErrorMessage name="firstName" component="div" className="invalid-feedback" />
-//               </div>
-//               <div className="form-group">
-//                   <label htmlFor="lastName">Last Name</label>
-//                   <Field name="lastName" type="text" className={'form-control' + (errors.lastName && touched.lastName ? ' is-invalid' : '')} />
-//                   <ErrorMessage name="lastName" component="div" className="invalid-feedback" />
-//               </div>
-//               <div className="form-group">
-//                   <label htmlFor="email">Email</label>
-//                   <Field name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
-//                   <ErrorMessage name="email" component="div" className="invalid-feedback" />
-//               </div>
-//               <div className="form-group">
-//                   <label htmlFor="password">Password</label>
-//                   <Field name="password" type="password" className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
-//                   <ErrorMessage name="password" component="div" className="invalid-feedback" />
-//               </div>
-//               <div className="form-group">
-//                   <label htmlFor="confirmPassword">Confirm Password</label>
-//                   <Field name="confirmPassword" type="password" className={'form-control' + (errors.confirmPassword && touched.confirmPassword ? ' is-invalid' : '')} />
-//                   <ErrorMessage name="confirmPassword" component="div" className="invalid-feedback" />
-//               </div>
-//               <div className="form-group">
-//                   <button type="submit" className="btn btn-primary mr-2">Register</button>
-//                   <button type="reset" className="btn btn-secondary">Reset</button>
-//               </div>
-//           </Form>
-//       )}
-//   />
-//   )
-// }
-
-
-class Login extends Component {
-  state = {
-    email: '',
-    password: '',
-    authenticateError: ''
-  }
-
-  handleChange = e => {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value
-    });
   };
 
-  render() {
-
-    const { email, password, authenticateError } = this.state;
-    const { classes } = this.props;
-
-    const errorList = [];
-
-    if (authenticateError) {
-      errorList.push(authenticateError);
-    }
-
-    return (
-      <Mutation mutation={login}>
-        {(login, { error, loading, data }) => (
-          <form
-          noValidate
-          onSubmit={async e => {
-            e.preventDefault();
-        
-            const { email, password } = this.state;
-        
-            this.setState({
-              authenticateError: ""
-            });
-        
-            const res = await login({
-              variables: { email, password },
-              refetchQueries: [`getUser`]
-            });
-        
-            const { ok, errors } = res.data.login;
-        
-            if (ok) {
-              // return this.props.history.push("/");
-            } else {
-              const err = {};
-              errors.forEach(({ path, message }) => {
-                err[`${path}Error`] = message;
-              });
-              console.log(err)
-              this.setState(err);
-            }
-        
+  return (
+    <Mutation mutation={LOGIN_USER}>
+      {(login, { loading }) => (
+        <Formik
+          initialValues={{
+            email: '',
+            password: ''
           }}
-        >
-          <Typography variant='h3' className={classes.subGreeting}>
-            Access your account
-          </Typography>
-          <Button size='large' className={classes.googleButton} href='http://localhost:5000/auth/google'>
-            <img src={google} alt='google' className={classes.googleIcon} />
-            &nbsp;Sign in with Google
-          </Button>
-          <div className={classes.formDividerContainer}>
-            <div className={classes.formDivider} />
-            <Typography className={classes.formDividerWord}>or</Typography>
-            <div className={classes.formDivider} />
-          </div>
-          <Fade in={!!authenticateError}>
-            <Typography color='secondary' className={classes.errorMessage}>
-              Something is wrong with your login or password :(
-            </Typography>
-          </Fade>
-          {/* <TextFieldGroup
-            name="email"
-            error={authenticateError}
-            onChange={this.handleChange}
-            value={email}
-            label="Email"
-            type="email"
-            fullWidth
-            placeholder="Email"
-          />
-          <TextFieldGroup
-            error={authenticateError}
-            name="password"
-            onChange={this.handleChange}
-            value={password}
-            type="password"
-            fullWidth
-            label="Password"
-            placeholder="Password"
-          /> */}
-          <div className={classes.formButtons}>
-            {loading ? (
-              <CircularProgress size={26} className={classes.loginLoader} />
-            ) : (
-            <Button
-              disabled={
-                email.length === 0 ||
-                password.length === 0
-              }
-              type="submit"
-              onClick={this.onSubmit}
-              variant='contained'
-              color='primary'
-              size='large'
-            >
+          validationSchema={validateFields}
+          onSubmit={fields => onSubmit(fields, login)}
+          render={({
+            errors,
+            touched,
+            handleSubmit
+          }) => (
+            <Form onSubmit={handleSubmit}>
+              <Typography variant='h3' className={classes.tabContentTitle}>
+              Access your account
+              </Typography>
+              <Button size='large' className={classes.googleButton} href='http://localhost:5000/auth/google'>
+                <img src={google} alt='google' className={classes.googleIcon} />
+              &nbsp;Sign in with Google
+              </Button>
+              <div className={classes.formDividerContainer}>
+                <div className={classes.formDivider} />
+                <Typography className={classes.formDividerWord}>or</Typography>
+                <div className={classes.formDivider} />
+              </div>
+              {authError && (
+                <Fade in={authError}>
+                  <Typography color='secondary' className={classes.errorMessage}>
+                    Something is wrong with your credentials :(
+                  </Typography>
+                </Fade>
+              )}
+              <Field
+                name='email'
+                render={({ field, form }) => (
+                  <TextFieldGroup
+                    {...field}
+                    form={form}
+                    type='email'
+                    label='Email'
+                    placeholder='Email'
+                    required
+                  />
+                )}
+              />
+              <Field
+                name='password'
+                render={({ field, form }) => (
+                  <TextFieldGroup
+                    {...field}
+                    form={form}
+                    type='password'
+                    label='Password'
+                    placeholder='Password'
+                    required
+                  />
+                )}
+              />
+              <div className={classes.formButtons}>
+                {loading ? (
+                  <CircularProgress size={26} className={classes.loginLoader} />
+                ) : (
+                  <Button
+                    disabled={!isEmptyObject(errors)}
+                    type='submit'
+                    onClick={onSubmit}
+                    variant='contained'
+                    color='primary'
+                    size='large'
+                  >
                 Login
-            </Button>
-            )}
-            <Button
-              color='primary'
-              size='large'
-              className={classes.forgetButton}
-            >
-              Forgot Password
-            </Button>
-          </div>
-        </form>
-        )}
-      </Mutation>
-    );
-  }
-}
+                  </Button>
+                )}
+                <Button
+                  color='primary'
+                  size='large'
+                  className={classes.forgetButton}
+                >
+                  Forgot Password
+                </Button>
+              </div>
+            </Form>
+          )}
+        />
+      )}
+    </Mutation>
+  );
+};
 
-export default withStyles(styles)(Login);
+export default withRouter(withStyles(styles)(Login));

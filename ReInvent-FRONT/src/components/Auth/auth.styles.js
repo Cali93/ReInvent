@@ -63,12 +63,7 @@ export const styles = theme => ({
   gendersContainer: {
     marginTop: '15px'
   },
-  greeting: {
-    fontWeight: 500,
-    textAlign: 'center',
-    marginTop: theme.spacing(4)
-  },
-  subGreeting: {
+  tabContentTitle: {
     fontWeight: 500,
     textAlign: 'center',
     marginTop: theme.spacing(2)
@@ -99,8 +94,8 @@ export const styles = theme => ({
     textTransform: 'none'
   },
   formDividerContainer: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
     display: 'flex',
     alignItems: 'center'
   },
@@ -116,20 +111,6 @@ export const styles = theme => ({
   errorMessage: {
     textAlign: 'center'
   },
-  textFieldUnderline: {
-    '&:before': {
-      borderBottomColor: theme.palette.primary.light
-    },
-    '&:after': {
-      borderBottomColor: theme.palette.primary.main
-    },
-    '&:hover:before': {
-      borderBottomColor: `${theme.palette.primary.light} !important`
-    }
-  },
-  textField: {
-    borderBottomColor: theme.palette.background.light
-  },
   formButtons: {
     width: '100%',
     marginTop: theme.spacing(4),
@@ -143,13 +124,5 @@ export const styles = theme => ({
   },
   loginLoader: {
     marginLeft: theme.spacing(4)
-  },
-  copyright: {
-    marginTop: theme.spacing(4),
-    whiteSpace: 'nowrap',
-    [theme.breakpoints.up('md')]: {
-      position: 'absolute',
-      bottom: theme.spacing(2)
-    }
   }
 });
