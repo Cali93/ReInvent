@@ -42,7 +42,7 @@ const Users = () => {
   const isAdmin = role === 'admin';
   const isNotBasicUser = role !== 'user';
   const query = isAdmin ? GET_ALL_USERS : GET_ALL_USERS_BY_OFFICE;
-  const queryOptions = isAdmin ? null : {
+  const queryOptions = isAdmin ? {} : {
     variables: {
       officeId
     }

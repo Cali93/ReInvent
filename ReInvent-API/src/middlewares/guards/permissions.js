@@ -42,11 +42,13 @@ const isAdminOrOwner = rule()(async (parent, args, { models, req }, info) => {
   if (req.session && req.session.userId) {
     return models.User.scope('withoutPassword').findOne({
       where: {
-        id: { [Op.eq]: req.session.userId },
-        role: { [Op.or]: ['admin'] }
+        id: { [Op.eq]: req.session.userId }
       },
       raw: true
-    }).then(user => !!user.id || (args.id === req.session.userId));
+    }).then(user =>
+      user.role === 'admin' ||
+      args.input.id === req.session.userId
+    );
   } else {
     return false;
   }

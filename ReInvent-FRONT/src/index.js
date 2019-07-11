@@ -19,7 +19,6 @@ const cache = new InMemoryCache();
 
 const client = new ApolloClient({
   link: createHttpLink({
-    // uri: 'https://blackbelt-api.herokuapp.com/graphql',
     uri: 'http://localhost:5000/graphql',
     credentials: 'include'
   }),

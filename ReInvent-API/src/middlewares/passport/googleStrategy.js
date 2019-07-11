@@ -39,6 +39,7 @@ export const initGoogleStrategy = passport => passport.use(
               email: email,
               avatar: picture,
               firstName: given_name,
+              gender: 'other',
               lastName: family_name,
               officeId: pickRandomItem([1, 2, 3, 4]),
               role: mockRole

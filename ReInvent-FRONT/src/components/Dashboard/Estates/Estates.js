@@ -32,7 +32,7 @@ const Estates = () => {
   const isAdmin = role === 'admin';
   const isNotBasicUser = role !== 'user';
   const query = isAdmin ? GET_ALL_ESTATES : GET_ALL_ESTATES_BY_OFFICE;
-  const queryOptions = isAdmin ? null : {
+  const queryOptions = isAdmin ? {} : {
     variables: {
       officeId
     }

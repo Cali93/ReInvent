@@ -45,6 +45,16 @@ export const UPDATE_USER = gql`
   mutation($input: UpdateUserInput!) {
     updateUser(input: $input) {
       ok
+      user {
+        id
+        firstName
+        lastName
+        gender
+        role
+        officeId
+        avatar
+        email
+      }
       errors {
         path
         message

@@ -14,7 +14,7 @@ export default gql`
   }
 
   type Query {
-    getUser: getUserResponse!
+    getUser: UserResponse!
     allUsers: [User!]!
     allUsersByOfficeId(officeId: Int!): [User!]!
   }
@@ -22,7 +22,7 @@ export default gql`
   type Mutation {
     register(input: RegisterInput!): UserResponse!
     createUser(input: CreateUserInput!): UserResponse!
-    updateUser(input: UpdateUserInput!): UserResponseStatus!
+    updateUser(input: UpdateUserInput!): UserResponse!
     login(email: String!, password: String!): UserResponse!
     logout: LogoutResponse!
     deleteUser(id: Int!): UserResponseStatus!
@@ -32,12 +32,6 @@ export default gql`
     admin
     manager
     user
-  }
-
-  type getUserResponse {
-    ok: Boolean!
-    errors: [Error!]
-    user: User
   }
 
   type UserResponse {

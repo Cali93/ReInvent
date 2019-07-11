@@ -8,6 +8,7 @@ export const GET_CURRENT_USER = gql`
         id
         firstName
         lastName
+        gender
         avatar
         role
         officeId
@@ -29,6 +30,8 @@ export const LOGIN_USER = gql`
         id
         firstName
         lastName
+        gender
+        avatar
         officeId
         role
         email
@@ -37,6 +40,14 @@ export const LOGIN_USER = gql`
         path
         message
       }
+    }
+  }
+`;
+
+export const LOGOUT_USER = gql`
+  mutation {
+    logout {
+      ok
     }
   }
 `;

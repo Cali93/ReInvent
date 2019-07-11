@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { useStoreActions } from 'easy-peasy';
-import './App.css';
 import { useQuery } from 'react-apollo-hooks';
+
 import Auth from './components/Auth/Auth';
 import Dashboard from './components/Dashboard/Dashboard';
 import Error404 from './components/Error/Error404';

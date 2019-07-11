@@ -11,7 +11,7 @@ export const db = new Sequelize(
   }
 );
 
-// production (comment if in development) $fixMe
+// production (comment if in development)
 // export const db = new Sequelize(
 //   process.env.DATABASE_URL,
 //   {

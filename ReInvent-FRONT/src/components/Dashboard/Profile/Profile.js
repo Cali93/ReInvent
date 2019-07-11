@@ -23,7 +23,7 @@ const Profile = () => {
 
   const handleEditUser = useCallback(
     () => {
-      setToggleEditDialog(prevState => !prevState);
+      setToggleEditDialog(!isEditDialogOpen);
     },
     [isEditDialogOpen]
   );
@@ -34,6 +34,7 @@ const Profile = () => {
       {isEditDialogOpen && (
         <EditUserDialog
           isOpen={isEditDialogOpen}
+          profileMode
           toggleDialog={() => setToggleEditDialog()}
           user={userFields}
         />
