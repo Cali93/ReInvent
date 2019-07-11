@@ -10,9 +10,14 @@ export default gql`
     cover: String
   }
 
+  input OfficeEmailsInput {
+    user: Int!
+    email: String!
+  }
+
   input CreateOfficeInput {
     name: String!
-    email: String!
+    emails: [OfficeEmailsInput]
     country: String!
     cover: String!
   }
