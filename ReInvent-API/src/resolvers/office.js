@@ -33,21 +33,31 @@ export default {
       )
   },
   Mutation: {
-    updateOffice: (parent, args, { models, isAuth }) =>
-      isAuth && models.Office.findAll({
-        where: {
-          estateId: { [Op.eq]: args.estateId }
-        }
-      }),
-    deleteOffice: async (parent, { passphrase }, { models }) => {
+    updateOffice: async (parent, { input }, { models }) => {
       try {
-        return passphrase === process.env.PASS_PHRASE
-          ? await models.Office.destroy({
-            where: {}
-          }).then(() => ({
-            ok: true
-          }))
-          : { ok: false };
+        const { officeId, ...newData } = input;
+        await models.Office.update(
+          { ...newData },
+          { where: { id: { [Op.eq]: officeId } } }
+        );
+        return {
+          ok: true
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        };
+      }
+    },
+    deleteOffice: async (parent, { officeId }, { models }) => {
+      try {
+        await models.Office.destroy(
+          { where: { id: { [Op.eq]: officeId } } }
+        );
+        return {
+          ok: true
+        };
       } catch (err) {
         return {
           ok: false,

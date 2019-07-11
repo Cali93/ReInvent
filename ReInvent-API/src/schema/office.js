@@ -11,8 +11,8 @@ export default gql`
   }
 
   input OfficeEmailsInput {
-    owner: String!
-    email: String!
+    owner: String
+    email: String
   }
 
   input CreateOfficeInput {
@@ -23,8 +23,9 @@ export default gql`
   }
 
   input UpdateOfficeInput {
+    officeId: Int!
     name: String
-    email: String
+    emails: [OfficeEmailsInput]
     country: String
     cover: String
   }

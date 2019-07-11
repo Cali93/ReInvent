@@ -18,8 +18,8 @@ export const GET_ALL_OFFICES = gql`
 `;
 
 export const DELETE_OFFICE = gql`
-  mutation($id: Int!) {
-    deleteOffice(id: $id) {
+  mutation($officeId: Int!) {
+    deleteOffice(officeId: $officeId) {
       ok
       errors {
         path

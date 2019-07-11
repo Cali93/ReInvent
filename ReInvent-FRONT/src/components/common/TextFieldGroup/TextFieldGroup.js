@@ -15,6 +15,7 @@ export const TextFieldGroup = ({
   field,
   hidden,
   className,
+  value,
   ...inputProps
 }) => {
   const touched = form.touched[name];
@@ -25,6 +26,7 @@ export const TextFieldGroup = ({
         {...inputProps}
         id={id}
         name={name}
+        value={value || ''}
         label={label}
         className={className}
         placeholder={placeholder}
@@ -50,7 +52,7 @@ TextFieldGroup.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   error: PropTypes.string,
   type: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,

@@ -23,11 +23,17 @@ const Offices = () => {
   const classes = useOfficeStyles();
   const [isEditDialogOpen, setToggleEditDialog] = useState(false);
   const [isCreateDialogOpen, setToggleCreateDialog] = useState(false);
-  const [office, setOffice] = useState({ officeId: null, name: '', cover: '' });
+  const [office, setOffice] = useState({
+    officeId: null,
+    name: '',
+    cover: '',
+    country: '',
+    emails: ''
+  });
   const { data, error, loading } = useQuery(GET_ALL_OFFICES);
 
-  const handleEditOffice = (officeId, name, cover) => {
-    setOffice({ officeId, name, cover });
+  const handleEditOffice = (officeId, name, cover, country, emails) => {
+    setOffice({ officeId, name, cover, country, emails });
     setToggleEditDialog(prevState => !prevState);
   };
 
@@ -61,8 +67,7 @@ const Offices = () => {
             color='textSecondary'
             paragraph
           >
-            You can browse through all the properties that have been carefully
-            selected to match the need of our customers.
+            You can browse through all our offices accross the world.
           </Typography>
           <div className={classes.heroButtons}>
             <Grid container spacing={2} justify='center'>
@@ -82,7 +87,7 @@ const Offices = () => {
       {isEditDialogOpen && (
         <EditOfficeDialog
           isOpen={isEditDialogOpen}
-          toggleDialog={setToggleEditDialog}
+          toggleDialog={() => setToggleEditDialog()}
           office={office}
         />
       )}
@@ -95,8 +100,8 @@ const Offices = () => {
       <Container className={classes.cardGrid} maxWidth='md'>
         {/* End hero unit */}
         <Grid container spacing={4}>
-          {data.allOffices.offices.map(({ id, name, cover }) => (
-            <Grid item key={id} xs={12} sm={6} md={3}>
+          {data.allOffices.offices.map(({ id, name, cover, country, emails }) => (
+            <Grid item key={id} xs={12} sm={6} md={4}>
               <Card className={classes.card}>
                 <CardMedia
                   className={classes.cardMedia}
@@ -104,13 +109,14 @@ const Offices = () => {
                   title={name}
                 />
                 <CardContent className={classes.cardContent}>
-                  <Typography gutterBottom variant='h5' component='h2'>
-                    {name}
+                  <Typography gutterBottom variant='h4' component='h3'>
+                    {name} - { country }
                   </Typography>
-                  <Typography>
-                    A beautiful house that has everything you would expect
-                    from a cosy home.
-                  </Typography>
+                  {emails.map(({ email, owner }) => email && (
+                    <Typography key={email}>
+                      {owner && `${owner} -` } {email}
+                    </Typography>
+                  ))}
                 </CardContent>
                 <CardActions className={classes.cardActions}>
                   <Button size='small' color='primary'>
@@ -118,7 +124,7 @@ const Offices = () => {
                   </Button>
                   <Button
                     size='small'
-                    onClick={() => handleEditOffice(id, name, cover)}
+                    onClick={() => handleEditOffice(id, name, cover, country, emails)}
                   >
                     <EditIcon color='secondary' />
                   </Button>
@@ -129,7 +135,7 @@ const Offices = () => {
                         onConfirmation={() =>
                           deleteOffice({
                             variables: {
-                              id
+                              officeId: id
                             },
                             refetchQueries: [{ query: GET_ALL_OFFICES }]
                           })

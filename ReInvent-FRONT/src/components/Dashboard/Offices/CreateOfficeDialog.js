@@ -24,10 +24,8 @@ const CreateOfficeDialog = ({ isOpen, toggleDialog }) => {
   const validateFields = Yup.object().shape({
     name: Yup.string()
       .required('Name is required'),
-    cover: Yup.string()
-      .required('Cover is required'),
-    country: Yup.string()
-      .required('Cover is required'),
+    cover: Yup.string(),
+    country: Yup.string(),
     emails: Yup.array(Yup.object({
       owner: Yup.string(),
       email: Yup.string().email()
