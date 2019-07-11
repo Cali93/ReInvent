@@ -19,6 +19,7 @@ import { Mutation } from 'react-apollo';
 import EditUserDialog from './EditUserDialog';
 import CreateUserDialog from './CreateUserDialog';
 import { useStoreState } from 'easy-peasy';
+import { renderGender } from '../../../utils/helpers';
 
 const Users = () => {
   const classes = useUserStyles();
@@ -57,17 +58,6 @@ const Users = () => {
 
   const handleCreateUser = () => {
     setToggleCreateDialog(prevState => !prevState);
-  };
-
-  const renderGender = (gender) => {
-    switch (gender.toLowerCase()) {
-      case 'male':
-        return 'Mr.';
-      case 'female':
-        return 'Mrs.';
-      default:
-        return '';
-    }
   };
 
   if (loading) {
@@ -115,6 +105,12 @@ const Users = () => {
           )}
         </Container>
       </div>
+      {isNotBasicUser && isCreateDialogOpen && (
+        <CreateUserDialog
+          isOpen={isCreateDialogOpen}
+          toggleDialog={handleCreateUser}
+        />
+      )}
       {isNotBasicUser && isEditDialogOpen && (
         <EditUserDialog
           isOpen={isEditDialogOpen}
@@ -122,14 +118,7 @@ const Users = () => {
           user={user}
         />
       )}
-      {isNotBasicUser && isCreateDialogOpen && (
-        <CreateUserDialog
-          isOpen={isCreateDialogOpen}
-          toggleDialog={handleCreateUser}
-        />
-      )}
       <Container className={classes.cardGrid} maxWidth='md'>
-        {/* End hero unit */}
         <Grid container spacing={4}>
           {users.map(user => (
             <Grid item key={user.id} xs={12} sm={6} md={4}>

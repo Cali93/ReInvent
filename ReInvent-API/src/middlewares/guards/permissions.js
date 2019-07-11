@@ -38,6 +38,20 @@ const isAdmin = rule()(async (parent, args, { models, req }, info) => {
   }
 });
 
+const isAdminOrOwner = rule()(async (parent, args, { models, req }, info) => {
+  if (req.session && req.session.userId) {
+    return models.User.scope('withoutPassword').findOne({
+      where: {
+        id: { [Op.eq]: req.session.userId },
+        role: { [Op.or]: ['admin'] }
+      },
+      raw: true
+    }).then(user => !!user.id || (args.id === req.session.userId));
+  } else {
+    return false;
+  }
+});
+
 export const permissions = shield({
   Query: {
     getUser: isAuthenticated,
@@ -55,7 +69,7 @@ export const permissions = shield({
     updateOffice: isAdmin,
     deleteOffice: isAdmin,
     createUser: isAdminOrManager,
-    updateUser: isAdminOrManager,
+    updateUser: isAdminOrOwner,
     deleteUser: isAdminOrManager
   }
 });

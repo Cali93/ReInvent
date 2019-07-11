@@ -109,7 +109,6 @@ const Estates = () => {
         />
       )}
       <Container className={classes.cardGrid} maxWidth='md'>
-        {/* End hero unit */}
         <Grid container spacing={4}>
           {estates.map(({ id, name, cover }) => (
             <Grid item key={id} xs={12} sm={6} md={3}>

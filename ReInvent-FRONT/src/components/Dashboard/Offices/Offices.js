@@ -102,7 +102,6 @@ const Offices = () => {
         />
       )}
       <Container className={classes.cardGrid} maxWidth='md'>
-        {/* End hero unit */}
         <Grid container spacing={4}>
           {data.allOffices.offices.map(({ id, name, cover, country, emails }) => (
             <Grid item key={id} xs={12} sm={6} md={4}>
