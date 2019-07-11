@@ -28,6 +28,15 @@ export default {
       order: [
         ['firstName', 'ASC']
       ]
+    }),
+    allUsersByOfficeId: (parent, { officeId }, { models }) => models.User.findAll({
+      where: {
+        office_id: officeId
+      },
+      raw: true,
+      order: [
+        ['firstName', 'ASC']
+      ]
     })
   },
   Mutation: {

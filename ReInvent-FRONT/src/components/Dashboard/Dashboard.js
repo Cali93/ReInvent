@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Estates from './Estates/Estates';
-import Charts from './Charts/Charts';
+import Profile from './Profile/Profile';
 import Offices from './Offices/Offices';
 import Users from './Users/Users';
 import Sidebar from '../Layout/Sidebar/Sidebar';
@@ -27,10 +27,10 @@ const Dashboard = () => {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Switch>
-            <PrivateRoute exact path='/app/charts' component={Charts} />
             <PrivateRoute exact path='/app/estates' component={Estates} />
             <PrivateRoute exact path='/app/offices' component={Offices} />
             <PrivateRoute exact path='/app/users' component={Users} />
+            <PrivateRoute exact path='/app/profile' component={Profile} />
           </Switch>
         </main>
       </div>

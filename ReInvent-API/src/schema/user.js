@@ -13,15 +13,25 @@ export default gql`
     gender: String
   }
 
+  type Query {
+    getUser: getUserResponse!
+    allUsers: [User!]!
+    allUsersByOfficeId(officeId: Int!): [User!]!
+  }
+
+  type Mutation {
+    register(input: RegisterInput!): UserResponse!
+    createUser(input: CreateUserInput!): UserResponse!
+    updateUser(input: UpdateUserInput!): UserResponseStatus!
+    login(email: String!, password: String!): UserResponse!
+    logout: LogoutResponse!
+    deleteUser(id: Int!): UserResponseStatus!
+  }
+
   enum RoleEnum {
     admin
     manager
     user
-  }
-
-  type Query {
-    getUser: getUserResponse!
-    allUsers: [User!]!
   }
 
   type getUserResponse {
@@ -57,8 +67,9 @@ export default gql`
   input CreateUserInput {
     firstName: String!
     lastName: String!
-    avatar: String!
-    gender: String!
+    role: RoleEnum
+    avatar: String
+    gender: String
     officeId: Int!
     email: String!
   }
@@ -66,19 +77,11 @@ export default gql`
   input UpdateUserInput {
     id: Int!
     firstName: String
+    role: RoleEnum
     lastName: String
     avatar: String
     gender: String
     officeId: Int
     email: String
-  }
-
-  type Mutation {
-    register(input: RegisterInput!): UserResponse!
-    createUser(input: CreateUserInput!): UserResponse!
-    updateUser(input: UpdateUserInput!): UserResponseStatus!
-    login(email: String!, password: String!): UserResponse!
-    logout: LogoutResponse!
-    deleteUser(id: Int!): UserResponseStatus!
   }
 `;

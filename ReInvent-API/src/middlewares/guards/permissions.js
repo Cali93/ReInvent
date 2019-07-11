@@ -15,11 +15,10 @@ const isAdminOrManager = rule()(async (parent, args, { models, req }, info) => {
   if (req.session && req.session.userId) {
     return models.User.scope('withoutPassword').findOne({
       where: {
-        id: { [Op.eq]: req.session.userId },
-        role: { [Op.or]: ['admin', 'manager'] }
+        id: { [Op.eq]: req.session.userId }
       },
       raw: true
-    }).then(user => !!user.id);
+    }).then(({ role }) => role === 'admin' || role === 'manager');
   } else {
     return false;
   }
@@ -43,18 +42,20 @@ export const permissions = shield({
   Query: {
     getUser: isAuthenticated,
     allEstates: isAdmin,
-    // allEstatesByOfficeManagerOrUser: isAuthenticated,
+    allEstatesByOfficeId: isAuthenticated,
     allOffices: isAuthenticated,
-    allUsers: isAdminOrManager
+    allUsers: isAdmin,
+    allUsersByOfficeId: isAuthenticated
   },
   Mutation: {
     createEstate: isAdminOrManager,
-    updateEstate: isAdmin,
-    // updateEstateByOfficeManager: isAdminOrManager,
-    deleteEstate: isAdmin,
-    // deleteEstateByOfficeManager: isAdminOrManager,
+    updateEstate: isAdminOrManager,
+    deleteEstate: isAdminOrManager,
     createOffice: isAdmin,
     updateOffice: isAdmin,
-    deleteOffice: isAdmin
+    deleteOffice: isAdmin,
+    createUser: isAdminOrManager,
+    updateUser: isAdminOrManager,
+    deleteUser: isAdminOrManager
   }
 });

@@ -18,6 +18,7 @@ import ConfirmPopover from '../../common/ConfirmPopover/ConfirmPopover';
 import { Mutation } from 'react-apollo';
 import EditOfficeDialog from './EditOfficeDialog';
 import CreateOfficeDialog from './CreateOfficeDialog';
+import { useStoreState } from 'easy-peasy';
 
 const Offices = () => {
   const classes = useOfficeStyles();
@@ -30,6 +31,7 @@ const Offices = () => {
     country: '',
     emails: ''
   });
+  const isAdmin = useStoreState(state => state.user.user.role === 'admin');
   const { data, error, loading } = useQuery(GET_ALL_OFFICES);
 
   const handleEditOffice = (officeId, name, cover, country, emails) => {
@@ -69,29 +71,31 @@ const Offices = () => {
           >
             You can browse through all our offices accross the world.
           </Typography>
-          <div className={classes.heroButtons}>
-            <Grid container spacing={2} justify='center'>
-              <Grid item>
-                <Button
-                  variant='contained'
-                  color='primary'
-                  onClick={handleCreateOffice}
-                >
+          {isAdmin && (
+            <div className={classes.heroButtons}>
+              <Grid container spacing={2} justify='center'>
+                <Grid item>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={handleCreateOffice}
+                  >
                   Create an office
-                </Button>
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
-          </div>
+            </div>
+          )}
         </Container>
       </div>
-      {isEditDialogOpen && (
+      {isAdmin && isEditDialogOpen && (
         <EditOfficeDialog
           isOpen={isEditDialogOpen}
           toggleDialog={() => setToggleEditDialog()}
           office={office}
         />
       )}
-      {isCreateDialogOpen && (
+      {isAdmin && isCreateDialogOpen && (
         <CreateOfficeDialog
           isOpen={isCreateDialogOpen}
           toggleDialog={handleCreateOffice}
@@ -118,34 +122,36 @@ const Offices = () => {
                     </Typography>
                   ))}
                 </CardContent>
-                <CardActions className={classes.cardActions}>
-                  <Button size='small' color='primary'>
-                    <SeeIcon color='primary' />
-                  </Button>
-                  <Button
-                    size='small'
-                    onClick={() => handleEditOffice(id, name, cover, country, emails)}
-                  >
-                    <EditIcon color='secondary' />
-                  </Button>
-                  <Mutation mutation={DELETE_OFFICE}>
-                    {deleteOffice => (
-                      <ConfirmPopover
-                        confirmAction='Delete office'
-                        onConfirmation={() =>
-                          deleteOffice({
-                            variables: {
-                              officeId: id
-                            },
-                            refetchQueries: [{ query: GET_ALL_OFFICES }]
-                          })
-                        }
-                      >
-                        <DeleteIcon color='error' />
-                      </ConfirmPopover>
-                    )}
-                  </Mutation>
-                </CardActions>
+                {isAdmin && (
+                  <CardActions className={classes.cardActions}>
+                    <Button size='small' color='primary'>
+                      <SeeIcon color='primary' />
+                    </Button>
+                    <Button
+                      size='small'
+                      onClick={() => handleEditOffice(id, name, cover, country, emails)}
+                    >
+                      <EditIcon color='secondary' />
+                    </Button>
+                    <Mutation mutation={DELETE_OFFICE}>
+                      {deleteOffice => (
+                        <ConfirmPopover
+                          confirmAction='Delete office'
+                          onConfirmation={() =>
+                            deleteOffice({
+                              variables: {
+                                officeId: id
+                              },
+                              refetchQueries: [{ query: GET_ALL_OFFICES }]
+                            })
+                          }
+                        >
+                          <DeleteIcon color='error' />
+                        </ConfirmPopover>
+                      )}
+                    </Mutation>
+                  </CardActions>
+                )}
               </Card>
             </Grid>
           ))}

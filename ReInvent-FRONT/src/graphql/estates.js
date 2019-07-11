@@ -10,6 +10,16 @@ export const GET_ALL_ESTATES = gql`
     }
   }
 `;
+export const GET_ALL_ESTATES_BY_OFFICE = gql`
+  query($officeId: Int!) {
+    allEstatesByOfficeId(officeId: $officeId) {
+      id
+      name
+      cover
+      officeId
+    }
+  }
+`;
 
 export const DELETE_ESTATE = gql`
   mutation($id: Int!) {

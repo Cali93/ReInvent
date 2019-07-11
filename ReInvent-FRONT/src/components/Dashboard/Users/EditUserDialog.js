@@ -16,7 +16,7 @@ import { TextFieldGroup } from '../../common/TextFieldGroup/TextFieldGroup';
 import SubmitOrCancel from '../../common/SubmitOrCancel/SubmitOrCancel';
 import { GET_ALL_USERS, UPDATE_USER } from '../../../graphql/users';
 import { GET_ALL_OFFICES } from '../../../graphql/offices';
-import { genders } from '../../../utils/staticLists';
+import { genders, roles } from '../../../utils/staticLists';
 
 const EditUserDialog = ({ isOpen, toggleDialog, user }) => {
   const [editError, setEditError] = useState(false);
@@ -25,6 +25,8 @@ const EditUserDialog = ({ isOpen, toggleDialog, user }) => {
     firstName: Yup.string().required('First Name is required'),
     lastName: Yup.string().required('Last Name is required'),
     gender: Yup.string(),
+    role: Yup.string().required('Role is required'),
+    officeId: Yup.number().required('Office ID is required'),
     avatar: Yup.string(),
     email: Yup.string()
       .email('Email is invalid')
@@ -165,6 +167,37 @@ const EditUserDialog = ({ isOpen, toggleDialog, user }) => {
                       );
                     }}
                   </Query>
+                  <Field
+                    name='role'
+                    render={({ field, form }) => (
+                      <Select
+                        {...field}
+                        value={field.value || 0}
+                        fullWidth
+                        style={{ margin: '17px 0' }}
+                        variant='outlined'
+                        input={
+                          <OutlinedInput
+                            name='role'
+                            placeholder='Role'
+                          />
+                        }
+                      >
+                        <MenuItem
+                          key='select.role'
+                          value={0}
+                          disabled
+                        >
+                          <em>Select a role</em>
+                        </MenuItem>
+                        {roles.map(role => (
+                          <MenuItem key={role.value} value={role.value}>
+                            {role.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    )}
+                  />
                   <Field
                     name='gender'
                     render={({ field, form }) => (

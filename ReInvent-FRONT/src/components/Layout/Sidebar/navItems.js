@@ -4,7 +4,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import ChartsIcon from '@material-ui/icons/BarChart';
+import SettingsIcon from '@material-ui/icons/Settings';
 import EstatesIcon from '@material-ui/icons/AccountBalance';
 import PeopleIcon from '@material-ui/icons/People';
 import OfficesIcon from '@material-ui/icons/Domain';
@@ -39,12 +39,12 @@ export const MainNavItems = withRouter(({ history, match }) => {
           <ListItemText primary='Users' />
         </ListItem>
       </Link>
-      <Link style={resetLinkStyle} to='/app/charts'>
-        <ListItem button selected={isActive('/app/charts')}>
+      <Link style={resetLinkStyle} to='/app/profile'>
+        <ListItem button selected={isActive('/app/profile')}>
           <ListItemIcon>
-            <ChartsIcon />
+            <SettingsIcon />
           </ListItemIcon>
-          <ListItemText primary='Charts' />
+          <ListItemText primary='Profile' />
         </ListItem>
       </Link>
     </>

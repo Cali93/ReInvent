@@ -15,6 +15,20 @@ export const GET_ALL_USERS = gql`
   }
 `;
 
+export const GET_ALL_USERS_BY_OFFICE = gql`
+  query($officeId: Int!) {
+    allUsersByOfficeId(officeId: $officeId) {
+      id
+      firstName
+      lastName
+      gender
+      role
+      officeId
+      avatar
+      email
+    }
+  }
+`;
 export const DELETE_USER = gql`
   mutation($id: Int!) {
     deleteUser(id: $id) {

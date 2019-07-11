@@ -11,12 +11,15 @@ import {
 
 import { TextFieldGroup } from '../../common/TextFieldGroup/TextFieldGroup';
 import SubmitOrCancel from '../../common/SubmitOrCancel/SubmitOrCancel';
-import { GET_ALL_ESTATES, CREATE_ESTATE } from '../../../graphql/estates';
+import { GET_ALL_ESTATES, CREATE_ESTATE, GET_ALL_ESTATES_BY_OFFICE } from '../../../graphql/estates';
 import { useStoreState } from 'easy-peasy';
 
 const CreateEstateDialog = ({ isOpen, toggleDialog }) => {
   const [createError, setCreateError] = useState(false);
-  const user = useStoreState(state => state.user.user);
+  const { role, officeId } = useStoreState(state => ({
+    officeId: state.user.user.officeId,
+    role: state.user.user.role
+  }));
 
   const validateFields = Yup.object().shape({
     name: Yup.string()
@@ -28,14 +31,19 @@ const CreateEstateDialog = ({ isOpen, toggleDialog }) => {
   const onSubmit = async (fields, form, createEstate) => {
     if (createEstate) {
       try {
+        const refetchQueriesByRole = role === 'admin' ? [
+          { query: GET_ALL_ESTATES }
+        ] : [
+          { query: GET_ALL_ESTATES_BY_OFFICE, variables: { officeId } }
+        ];
         const createEstateResponse = await createEstate({
           variables: {
             input: {
               ...fields,
-              officeId: user.officeId
+              officeId
             }
           },
-          refetchQueries: [{ query: GET_ALL_ESTATES }]
+          refetchQueries: refetchQueriesByRole
         });
         const { data } = createEstateResponse;
         const hasData = data && data.createEstate;

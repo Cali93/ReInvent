@@ -11,10 +11,15 @@ import {
 
 import { TextFieldGroup } from '../../common/TextFieldGroup/TextFieldGroup';
 import SubmitOrCancel from '../../common/SubmitOrCancel/SubmitOrCancel';
-import { UPDATE_ESTATE, GET_ALL_ESTATES } from '../../../graphql/estates';
+import { UPDATE_ESTATE, GET_ALL_ESTATES, GET_ALL_ESTATES_BY_OFFICE } from '../../../graphql/estates';
+import { useStoreState } from 'easy-peasy';
 
 const EditEstateDialog = ({ estate, isOpen, toggleDialog }) => {
   const [updateError, setUpdateError] = useState(false);
+  const { role, officeId } = useStoreState(state => ({
+    officeId: state.user.user.officeId,
+    role: state.user.user.role
+  }));
   const validateFields = Yup.object().shape({
     name: Yup.string()
       .required('Name is required'),
@@ -25,6 +30,11 @@ const EditEstateDialog = ({ estate, isOpen, toggleDialog }) => {
   const onSubmit = async (fields, updateEstate) => {
     if (updateEstate) {
       try {
+        const refetchQueriesByRole = role === 'admin' ? [
+          { query: GET_ALL_ESTATES }
+        ] : [
+          { query: GET_ALL_ESTATES_BY_OFFICE, variables: { officeId } }
+        ];
         const updateEstateResponse = await updateEstate({
           variables: {
             input: {
@@ -32,7 +42,7 @@ const EditEstateDialog = ({ estate, isOpen, toggleDialog }) => {
               estateId: estate.estateId
             }
           },
-          refetchQueries: [{ query: GET_ALL_ESTATES }]
+          refetchQueries: refetchQueriesByRole
         });
         const { data } = updateEstateResponse;
         const hasData = data && data.updateEstate;

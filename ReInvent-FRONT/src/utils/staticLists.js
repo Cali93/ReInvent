@@ -1,3 +1,18 @@
+export const roles = [
+  {
+    value: 'admin',
+    label: 'Admin'
+  },
+  {
+    value: 'manager',
+    label: 'Manager'
+  },
+  {
+    value: 'user',
+    label: 'Basic user'
+  }
+];
+
 export const genders = [
   {
     value: 'female',

@@ -13,6 +13,15 @@ export default {
       order: [
         ['name', 'ASC']
       ]
+    }),
+    allEstatesByOfficeId: (parent, { officeId }, { models }) => models.Estate.findAll({
+      where: {
+        office_id: officeId
+      },
+      raw: true,
+      order: [
+        ['name', 'ASC']
+      ]
     })
   },
   Mutation: {

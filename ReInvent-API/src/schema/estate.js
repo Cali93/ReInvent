@@ -10,6 +10,7 @@ export default gql`
 
   type Query {
     allEstates: [Estate!]!
+    allEstatesByOfficeId(officeId: Int!): [Estate!]!
   }
 
   type Mutation {
