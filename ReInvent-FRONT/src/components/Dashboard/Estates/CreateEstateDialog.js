@@ -121,7 +121,6 @@ const CreateEstateDialog = ({ isOpen, toggleDialog }) => {
             />
           )}
         </Mutation>
-        ;
       </DialogContent>
     </Dialog>
   );

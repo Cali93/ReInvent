@@ -1,5 +1,6 @@
 import { formatErrors } from '../utils/format-errors';
 import bcrypt from 'bcryptjs';
+import { v4 } from 'uuid';
 
 export default {
   Query: {
@@ -21,7 +22,13 @@ export default {
           errors: formatErrors(err, models)
         };
       }
-    }
+    },
+    allUsers: (parent, args, { models }) => models.User.findAll({
+      raw: true,
+      order: [
+        ['firstName', 'ASC']
+      ]
+    })
   },
   Mutation: {
     register: async (_parent, { input }, { models }) => {
@@ -33,6 +40,41 @@ export default {
         return {
           ok: true,
           user
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        };
+      }
+    },
+    createUser: async (_parent, { input }, { models }) => {
+      try {
+        const password = v4().substring(0, 20);
+        const user = await models.User.create({ ...input, password }).then(userRes => {
+          const { password, ...userInfos } = userRes.get({ plain: true });
+          return userInfos;
+        });
+        return {
+          ok: true,
+          user
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        };
+      }
+    },
+    updateUser: async (parent, { input }, { models }) => {
+      try {
+        const { id, ...newData } = input;
+        await models.User.update(
+          { ...newData },
+          { where: { id } }
+        );
+        return {
+          ok: true
         };
       } catch (err) {
         return {
@@ -98,6 +140,21 @@ export default {
           return resolve({ ok: true });
         })
       );
+    },
+    deleteUser: async (parent, { id }, { models }) => {
+      try {
+        await models.User.destroy(
+          { where: { id } }
+        );
+        return {
+          ok: true
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          errors: formatErrors(err, models)
+        };
+      }
     }
   }
 };

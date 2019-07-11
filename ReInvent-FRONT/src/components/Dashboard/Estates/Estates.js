@@ -82,7 +82,7 @@ const Estates = () => {
       {isEditDialogOpen && (
         <EditEstateDialog
           isOpen={isEditDialogOpen}
-          toggleDialog={setToggleEditDialog}
+          toggleDialog={() => setToggleEditDialog()}
           estate={estate}
         />
       )}

@@ -137,10 +137,10 @@ const EditOfficeDialog = ({ isOpen, toggleDialog, office }) => {
                           }
                         >
                           <MenuItem
-                            key='select.nationality'
-                            value='Select your nationality'
+                            key='select.country'
+                            value='Select your country'
                           >
-                            <em>Select your nationality</em>
+                            <em>Select your country</em>
                           </MenuItem>
                           {countryList.map(option => (
                             <MenuItem key={option.name} value={option.name}>

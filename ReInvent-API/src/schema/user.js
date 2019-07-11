@@ -4,13 +4,13 @@ export default gql`
   type User {
     id: Int!
     email: String!
-    role: RoleEnum!
+    role: RoleEnum
     avatar: String
     googleId: String
     firstName: String
     lastName: String
     officeId: Int
-    gender: String!
+    gender: String
   }
 
   enum RoleEnum {
@@ -21,7 +21,7 @@ export default gql`
 
   type Query {
     getUser: getUserResponse!
-    allUsers(id: Int!, passphrase: String!): [User!]!
+    allUsers: [User!]!
   }
 
   type getUserResponse {
@@ -30,13 +30,7 @@ export default gql`
     user: User
   }
 
-  type RegisterResponse {
-    ok: Boolean!
-    user: User
-    errors: [Error!]
-  }
-
-  type LoginResponse {
+  type UserResponse {
     ok: Boolean!
     user: User
     errors: [Error!]
@@ -46,7 +40,7 @@ export default gql`
     ok: Boolean!
   }
 
-  type ValidateUserResponse {
+  type UserResponseStatus {
     ok: Boolean!
     errors: [Error!]
   }
@@ -60,11 +54,31 @@ export default gql`
     password: String!
   }
 
+  input CreateUserInput {
+    firstName: String!
+    lastName: String!
+    avatar: String!
+    gender: String!
+    officeId: Int!
+    email: String!
+  }
+
+  input UpdateUserInput {
+    id: Int!
+    firstName: String
+    lastName: String
+    avatar: String
+    gender: String
+    officeId: Int
+    email: String
+  }
+
   type Mutation {
-    register(input: RegisterInput!): RegisterResponse!
-    login(email: String!, password: String!): LoginResponse!
+    register(input: RegisterInput!): UserResponse!
+    createUser(input: CreateUserInput!): UserResponse!
+    updateUser(input: UpdateUserInput!): UserResponseStatus!
+    login(email: String!, password: String!): UserResponse!
     logout: LogoutResponse!
-    validateUser(id: Int!, passphrase: String!): ValidateUserResponse!
-    unValidateUser(id: Int!, passphrase: String!): ValidateUserResponse!
+    deleteUser(id: Int!): UserResponseStatus!
   }
 `;
