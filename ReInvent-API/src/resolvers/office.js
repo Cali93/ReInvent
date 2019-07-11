@@ -55,9 +55,12 @@ export default {
         };
       }
     },
-    createOffice: async (parent, args, { models }) => {
+    createOffice: async (parent, { input }, { models }) => {
       try {
-        console.log(args);
+        await models.Office.create(input);
+        return {
+          ok: true
+        };
       } catch (err) {
         return {
           ok: false,

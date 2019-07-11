@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, FieldArray } from 'formik';
 import { Mutation } from 'react-apollo';
 import * as Yup from 'yup';
 import {
   Dialog,
   DialogContent,
   Typography,
-  Fade
+  Fade,
+  Button,
+  MenuItem,
+  OutlinedInput,
+  Select
 } from '@material-ui/core';
 
 import { TextFieldGroup } from '../../common/TextFieldGroup/TextFieldGroup';
 import SubmitOrCancel from '../../common/SubmitOrCancel/SubmitOrCancel';
 import { GET_ALL_OFFICES, CREATE_OFFICE } from '../../../graphql/offices';
+import { countryList } from '../../../utils/staticLists';
 
 const CreateOfficeDialog = ({ isOpen, toggleDialog }) => {
   const [createError, setCreateError] = useState(false);
@@ -24,7 +29,7 @@ const CreateOfficeDialog = ({ isOpen, toggleDialog }) => {
     country: Yup.string()
       .required('Cover is required'),
     emails: Yup.array(Yup.object({
-      user: Yup.number(),
+      owner: Yup.string(),
       email: Yup.string().email()
     }))
   });
@@ -63,6 +68,7 @@ const CreateOfficeDialog = ({ isOpen, toggleDialog }) => {
     <Dialog
       open={isOpen}
       onClose={toggleDialog}
+      fullWidth
       aria-labelledby='form-dialog-title'
     >
       <DialogContent>
@@ -73,11 +79,19 @@ const CreateOfficeDialog = ({ isOpen, toggleDialog }) => {
                 name: '',
                 cover: '',
                 country: '',
-                emails: []
+                emails: [{ owner: '', email: '' }]
               }}
               validationSchema={validateFields}
-              onSubmit={(fields, form) => onSubmit(fields, form, createOffice)}
-              render={({ errors, touched, handleSubmit, handleReset }) => (
+              onSubmit={(fields, form) =>
+                onSubmit(fields, form, createOffice)
+              }
+              render={({
+                errors,
+                touched,
+                handleSubmit,
+                handleReset,
+                values
+              }) => (
                 <Form onSubmit={handleSubmit}>
                   <Typography variant='h3'>Create office</Typography>
                   {createError && (
@@ -116,28 +130,91 @@ const CreateOfficeDialog = ({ isOpen, toggleDialog }) => {
                   <Field
                     name='country'
                     render={({ field, form }) => (
-                      <TextFieldGroup
+                      <Select
                         {...field}
-                        form={form}
-                        name='country'
-                        label='Country'
-                        placeholder='Country'
-                        required
-                      />
+                        fullWidth
+                        variant='outlined'
+                        input={
+                          <OutlinedInput
+                            name='country'
+                            placeholder='Country'
+                          />
+                        }
+                      >
+                        <MenuItem
+                          key='select.nationality'
+                          value='Select your nationality'
+                        >
+                          <em>Select your nationality</em>
+                        </MenuItem>
+                        {countryList.map(option => (
+                          <MenuItem key={option.name} value={option.name}>
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
                     )}
                   />
-                  <Field
-                    name='emails'
-                    render={({ field, form }) => (
-                      <TextFieldGroup
-                        {...field}
-                        form={form}
-                        name='emails'
-                        label='Emails'
-                        placeholder='Emails'
-                      />
+                  <FieldArray name='emails'>
+                    {({ push, remove }) => (
+                      <>
+                        <Typography
+                          variant='h6'
+                          style={{ marginTop: '20px' }}
+                        >
+                          Office emails
+                        </Typography>
+                        {values.emails.map((email, index) => {
+                          return (
+                            <div
+                              key={index}
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row'
+                              }}
+                            >
+                              <Field
+                                name={`emails[${index}].owner`}
+                                render={({ field, form }) => {
+                                  return (
+                                    <TextFieldGroup
+                                      {...field}
+                                      form={form}
+                                      label='Owner'
+                                      placeholder='Owner'
+                                    />
+                                  );
+                                }}
+                              />
+                              <Field
+                                name={`emails[${index}].email`}
+                                render={({ field, form }) => (
+                                  <TextFieldGroup
+                                    {...field}
+                                    form={form}
+                                    label='Email'
+                                    placeholder='Email'
+                                  />
+                                )}
+                              />
+                              <span
+                                style={{ color: 'red' }}
+                                onClick={() => remove(index)}
+                              >
+                                x
+                              </span>
+                            </div>
+                          );
+                        })}
+                        <Button
+                          type='button'
+                          onClick={() => push({ owner: '', email: '' })}
+                        >
+                          Add new email
+                        </Button>
+                      </>
                     )}
-                  />
+                  </FieldArray>
                   <SubmitOrCancel
                     onSubmit={onSubmit}
                     errors={errors}
@@ -151,7 +228,6 @@ const CreateOfficeDialog = ({ isOpen, toggleDialog }) => {
             />
           )}
         </Mutation>
-        ;
       </DialogContent>
     </Dialog>
   );

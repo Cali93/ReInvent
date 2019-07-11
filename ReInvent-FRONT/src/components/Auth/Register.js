@@ -109,8 +109,8 @@ export const Register = withStyles(styles)(({ classes, handleTabChange }) => {
                           <FormControlLabel
                             key={gender.value}
                             value={gender.value}
-                            control={<Radio />}
                             label={gender.label}
+                            control={<Radio />}
                           />
                         ))
                       }

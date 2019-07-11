@@ -9,7 +9,7 @@ export const GET_ALL_OFFICES = gql`
         cover
         country
         emails {
-          user
+          owner
           email
         }
       }

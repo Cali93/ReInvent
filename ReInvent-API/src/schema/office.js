@@ -11,7 +11,7 @@ export default gql`
   }
 
   input OfficeEmailsInput {
-    user: Int!
+    owner: String!
     email: String!
   }
 
@@ -41,7 +41,7 @@ export default gql`
   }
 
   type OfficeEmails {
-    user: String,
+    owner: String,
     email: String
   }
 
@@ -52,8 +52,7 @@ export default gql`
 
   type OfficeResponseStatus {
     ok: Boolean!
-    office: Office
-    errors: [Error!]
+    errors: [Error]
   }
 
   type OfficesResponseStatus {
