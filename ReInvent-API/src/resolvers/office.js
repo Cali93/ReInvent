@@ -2,16 +2,10 @@ import { formatErrors } from '../utils/format-errors';
 import Sequelize from 'sequelize';
 const { Op } = Sequelize;
 
-const getTimestamp = isoDate => new Date(isoDate).getTime();
-
 export default {
   Query: {
-    allOffices: (parent, args, { models, isAuth }) =>
-      isAuth && models.Office.findAll({
-        where: {
-          estateId: { [Op.eq]: args.estateId }
-        }
-      }),
+    allOffices: (parent, args, { models }) =>
+      models.Office.findAll({ raw: true }).then(offices => ({ offices })),
     officeUsers: (parent, args, { models, isAuth }) =>
       isAuth && models.Office.findAll({
         where: {

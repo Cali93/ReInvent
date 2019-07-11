@@ -5,11 +5,9 @@ export default gql`
   type Office {
     id: Int!
     name: String!
-    email: String!
-    country: String!
-    cover: String!
-    userIds: [Int!]!
-    estateIds: [Int!]!
+    emails: [OfficeEmails]
+    country: String
+    cover: String
   }
 
   input CreateOfficeInput {
@@ -27,7 +25,7 @@ export default gql`
   }
 
   type Query {
-    allOffices: OfficeResponseStatus!,
+    allOffices: OfficesResponseStatus!,
     officeUsers(officeId: Int!): OfficeUsersAndCountResponse!
   }
 
@@ -35,6 +33,11 @@ export default gql`
     createOffice(input: CreateOfficeInput!) : OfficeResponseStatus!
     updateOffice(input: UpdateOfficeInput!) : OfficeResponseStatus!
     deleteOffice(officeId: Int!): OfficeResponseStatus!
+  }
+
+  type OfficeEmails {
+    user: String,
+    email: String
   }
 
   type OfficeUsersAndCountResponse {
@@ -46,5 +49,9 @@ export default gql`
     ok: Boolean!
     office: Office
     errors: [Error!]
+  }
+
+  type OfficesResponseStatus {
+    offices: [Office]!
   }
 `;
