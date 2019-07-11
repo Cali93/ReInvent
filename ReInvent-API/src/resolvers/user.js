@@ -78,7 +78,6 @@ export default {
     updateUser: async (parent, { input }, { models }) => {
       try {
         const { id, ...newData } = input;
-        console.log(newData);
         await models.User.update(
           { ...newData },
           { where: { id } }

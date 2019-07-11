@@ -34,7 +34,6 @@ const EditOfficeDialog = ({ isOpen, toggleDialog, office }) => {
   const onSubmit = async (fields, form, updateOffice) => {
     if (updateOffice) {
       try {
-        console.log(fields);
         const updateOfficeResponse = await updateOffice({
           variables: {
             input: {
@@ -85,7 +84,6 @@ const EditOfficeDialog = ({ isOpen, toggleDialog, office }) => {
                 handleReset,
                 values
               }) => {
-                console.log(errors);
                 return (
                   <Form onSubmit={handleSubmit}>
                     <Typography variant='h3'>Edit office</Typography>
