@@ -16,14 +16,14 @@ export const initGoogleStrategy = passport => passport.use(
     },
     (accessToken, refreshToken, profile, done) => {
       const { given_name, family_name, picture, email } = profile._json;
-      if (email.includes('weinvest.be')) {
+      if (email.includes('@competitor.')) {
         return done(null, false, {
           message: 'Competitors are not authorized to access the ReInvent platform'
         });
       } else {
         const { Op } = Sequelize;
         let mockRole = 'user';
-        if (email.includes('cali.armut' || 'elliott')) {
+        if (email.includes('project.owner@email.dev')) {
           mockRole = 'admin';
         }
         if (email.includes('manager')) {
