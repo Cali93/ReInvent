@@ -97,12 +97,10 @@ const main = async () => {
   const server = new ApolloServer({
     schema,
     context: ({ req, res }) => {
-      const isAuth = (req.session && req.session.userId);
       return {
         req,
         res,
-        models,
-        isAuth
+        models
       };
     },
     formatError: error => {

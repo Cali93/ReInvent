@@ -5,32 +5,7 @@ const { Op } = Sequelize;
 export default {
   Query: {
     allOffices: (parent, args, { models }) =>
-      models.Office.findAll({ raw: true }).then(offices => ({ offices })),
-    officeUsers: (parent, args, { models, isAuth }) =>
-      isAuth && models.Office.findAll({
-        where: {
-          estateId: { [Op.eq]: args.estateId },
-          isValid: { [Op.eq]: false }
-        },
-        include: [
-          {
-            model: models.Member,
-            attributes: ['id', 'lastname', 'firstname', 'picture']
-          }
-        ]
-      }).then(
-        offices => {
-          const membersOffices = offices.map(office => {
-            const memberOffice = office.get({ plain: true });
-            return memberOffice.Member;
-          });
-          const count = membersOffices.length;
-          return {
-            membersOffices,
-            count
-          };
-        }
-      )
+      models.Office.findAll({ raw: true }).then(offices => ({ offices }))
   },
   Mutation: {
     updateOffice: async (parent, { input }, { models }) => {

@@ -54,9 +54,9 @@ export default {
         };
       }
     },
-    archiveEstate: async (parent, { id }, { models, isAuth }) => {
+    archiveEstate: async (parent, { id }, { models }) => {
       try {
-        isAuth && await models.Estate.update(
+        await models.Estate.update(
           { archivedAt: Date.now() },
           { where: { id: { [Op.eq]: id } } }
         );
