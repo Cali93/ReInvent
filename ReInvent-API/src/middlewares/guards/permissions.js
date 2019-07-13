@@ -1,4 +1,5 @@
 import Sequelize from 'sequelize';
+import { or, and } from 'graphql-shield';
 const { Op } = Sequelize;
 const { rule, shield } = require('graphql-shield');
 
@@ -29,10 +30,24 @@ const isAdmin = rule()(async (parent, args, { models, req }, info) => {
     return models.User.scope('withoutPassword').findOne({
       where: {
         id: { [Op.eq]: req.session.userId },
-        role: { [Op.or]: ['admin'] }
+        role: { [Op.eq]: 'admin' }
       },
       raw: true
-    }).then(user => !!user.id);
+    }).then(({ role }) => role === 'admin');
+  } else {
+    return false;
+  }
+});
+
+const isManager = rule()(async (parent, args, { models, req }, info) => {
+  if (req.session && req.session.userId) {
+    return models.User.scope('withoutPassword').findOne({
+      where: {
+        id: { [Op.eq]: req.session.userId },
+        role: { [Op.eq]: 'manager' }
+      },
+      raw: true
+    }).then(({ role }) => role === 'manager');
   } else {
     return false;
   }
@@ -47,8 +62,38 @@ const isAdminOrOwner = rule()(async (parent, args, { models, req }, info) => {
       raw: true
     }).then(user =>
       user.role === 'admin' ||
-      args.input.id === req.session.userId
+      args.input.userId === req.session.userId
     );
+  } else {
+    return false;
+  }
+});
+
+const userBelongsToSameOffice = rule()(async (parent, args, { models, req }, info) => {
+  if (req.session && req.session.userId) {
+    return models.User.scope('withoutPassword').findAll({
+      where: {
+        id: { [Op.or]: [args.input.userId, req.session.userId] }
+      },
+      raw: true
+    }).then(async users =>
+      users.reduce((userA, userB) =>
+        userA.officeId === userB.officeId
+      ));
+  } else {
+    return false;
+  }
+});
+
+const estateBelongsToSameOffice = rule()(async (parent, args, { models, req }, info) => {
+  if (req.session && req.session.userId) {
+    return models.User.scope('withoutPassword').findOne({
+      where: {
+        id: req.session.userId,
+        officeId: { [Op.eq]: args.input.officeId }
+      },
+      raw: true
+    }).then(user => !!user.id);
   } else {
     return false;
   }
@@ -65,13 +110,13 @@ export const permissions = shield({
   },
   Mutation: {
     createEstate: isAdminOrManager,
-    updateEstate: isAdminOrManager,
-    deleteEstate: isAdminOrManager,
+    updateEstate: or(isAdmin, and(isManager, estateBelongsToSameOffice)),
+    deleteEstate: or(isAdmin, and(isManager, estateBelongsToSameOffice)),
     createOffice: isAdmin,
     updateOffice: isAdmin,
     deleteOffice: isAdmin,
     createUser: isAdminOrManager,
-    updateUser: isAdminOrOwner,
-    deleteUser: isAdminOrManager
+    updateUser: or(isAdminOrOwner, and(isManager, userBelongsToSameOffice)),
+    deleteUser: or(isAdmin, and(isManager, userBelongsToSameOffice))
   }
 });

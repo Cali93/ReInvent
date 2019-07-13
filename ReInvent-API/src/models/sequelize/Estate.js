@@ -6,7 +6,7 @@ export default (db, DataTypes) => {
   });
 
   Estate.associate = (models) => {
-    Estate.belongsTo(models.Office);
+    Estate.belongsTo(models.Office, { foreignKey: 'officeId' });
   };
 
   return Estate;

@@ -77,10 +77,10 @@ export default {
     },
     updateUser: async (parent, { input }, { models }) => {
       try {
-        const { id, ...newData } = input;
+        const { userId, ...newData } = input;
         await models.User.update(
           { ...newData },
-          { where: { id } }
+          { where: { id: userId } }
         );
         return {
           ok: true

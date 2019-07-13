@@ -24,7 +24,7 @@ const Estates = () => {
   const classes = useEstateStyles();
   const [isEditDialogOpen, setToggleEditDialog] = useState(false);
   const [isCreateDialogOpen, setToggleCreateDialog] = useState(false);
-  const [estate, setEstate] = useState({ estateId: null, name: '', cover: '' });
+  const [estate, setEstate] = useState({ estateId: null, name: '', cover: '', officeId: null });
   const { role, officeId } = useStoreState(state => ({
     role: state.user.user.role,
     officeId: state.user.user.officeId
@@ -40,8 +40,8 @@ const Estates = () => {
   const { data, error, loading } = useQuery(query, queryOptions);
   const estates = data.allEstates || data.allEstatesByOfficeId;
 
-  const handleEditEstate = (estateId, name, cover) => {
-    setEstate({ estateId, name, cover });
+  const handleEditEstate = (estateId, name, cover, estateOfficeId) => {
+    setEstate({ estateId, name, cover, officeId: estateOfficeId });
     setToggleEditDialog(prevState => !prevState);
   };
 
@@ -110,7 +110,7 @@ const Estates = () => {
       )}
       <Container className={classes.cardGrid} maxWidth='md'>
         <Grid container spacing={4}>
-          {estates.map(({ id, name, cover }) => (
+          {estates.map(({ id, name, cover, officeId: estateOfficeId }) => (
             <Grid item key={id} xs={12} sm={6} md={3}>
               <Card className={classes.card}>
                 <CardMedia
@@ -134,7 +134,7 @@ const Estates = () => {
                     </Button>
                     <Button
                       size='small'
-                      onClick={() => handleEditEstate(id, name, cover)}
+                      onClick={() => handleEditEstate(id, name, cover, estateOfficeId)}
                     >
                       <EditIcon color='secondary' />
                     </Button>

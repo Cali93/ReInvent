@@ -39,7 +39,8 @@ const EditEstateDialog = ({ estate, isOpen, toggleDialog }) => {
           variables: {
             input: {
               ...fields,
-              estateId: estate.estateId
+              estateId: estate.estateId,
+              officeId: estate.officeId
             }
           },
           refetchQueries: refetchQueriesByRole

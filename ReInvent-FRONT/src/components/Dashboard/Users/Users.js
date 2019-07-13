@@ -97,7 +97,7 @@ const Users = () => {
                     color='primary'
                     onClick={handleCreateUser}
                   >
-                  Create an user
+                    Create an user
                   </Button>
                 </Grid>
               </Grid>
@@ -125,7 +125,10 @@ const Users = () => {
               <Card className={classes.card}>
                 <CardMedia
                   className={classes.cardMedia}
-                  image={user.avatar}
+                  image={
+                    user.avatar ||
+                    'https://source.unsplash.com/random/400x200'
+                  }
                 />
                 <CardContent className={classes.cardContent}>
                   <Typography gutterBottom variant='h5' component='h2'>
@@ -154,19 +157,22 @@ const Users = () => {
                         <ConfirmPopover
                           confirmAction='Delete user'
                           onConfirmation={() => {
-                            const refetchQueriesByRole = role === 'admin' ? [
-                              { query: GET_ALL_USERS }
-                            ] : [
-                              { query: GET_ALL_USERS_BY_OFFICE, variables: { officeId } }
-                            ];
+                            const refetchQueriesByRole =
+                              role === 'admin'
+                                ? [{ query: GET_ALL_USERS }]
+                                : [
+                                  {
+                                    query: GET_ALL_USERS_BY_OFFICE,
+                                    variables: { officeId }
+                                  }
+                                ];
                             return deleteUser({
                               variables: {
                                 id: user.id
                               },
                               refetchQueries: refetchQueriesByRole
                             });
-                          }
-                          }
+                          }}
                         >
                           <DeleteIcon color='error' />
                         </ConfirmPopover>

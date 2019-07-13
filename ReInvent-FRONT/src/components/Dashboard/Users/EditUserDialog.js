@@ -78,10 +78,12 @@ const EditUserDialog = ({ isOpen, toggleDialog, user, profileMode }) => {
   const onSubmit = async (fields, form, updateUser) => {
     if (updateUser) {
       try {
+        const { id, ...userFields } = fields;
         const updateUserResponse = await updateUser({
           variables: {
             input: {
-              ...fields
+              userId: id,
+              ...userFields
             }
           },
           refetchQueries: refetchQueryByRole(role)
@@ -186,6 +188,7 @@ const EditUserDialog = ({ isOpen, toggleDialog, user, profileMode }) => {
                                   value={field.value || 0}
                                   style={{ margin: '17px 0' }}
                                   fullWidth
+                                  required
                                   variant='outlined'
                                   input={
                                     <OutlinedInput
@@ -220,6 +223,7 @@ const EditUserDialog = ({ isOpen, toggleDialog, user, profileMode }) => {
                             fullWidth
                             style={{ margin: '17px 0' }}
                             variant='outlined'
+                            required
                             input={
                               <OutlinedInput
                                 name='role'
@@ -283,7 +287,6 @@ const EditUserDialog = ({ isOpen, toggleDialog, user, profileMode }) => {
                         name='avatar'
                         label='Avatar'
                         placeholder='Avatar'
-                        required
                       />
                     )}
                   />

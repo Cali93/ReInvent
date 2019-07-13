@@ -27,6 +27,8 @@ const Profile = () => {
     },
     [isEditDialogOpen]
   );
+  const userAvatar =
+  user.avatar || 'https://source.unsplash.com/random/400x200';
 
   return (
     <div>
@@ -45,7 +47,7 @@ const Profile = () => {
             <Card className={classes.card}>
               <CardMedia
                 className={classes.cardMedia}
-                image={user.avatar}
+                image={userAvatar}
               />
               <CardContent className={classes.cardContent}>
                 <Typography gutterBottom variant='h5' component='h2'>

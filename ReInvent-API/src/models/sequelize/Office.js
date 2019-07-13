@@ -9,8 +9,8 @@ export default (db, DataTypes) => {
   });
 
   Office.associate = (models) => {
-    Office.hasMany(models.User);
-    Office.hasMany(models.Estate);
+    Office.hasMany(models.User, { foreignKey: 'officeId' });
+    Office.hasMany(models.Estate, { foreignKey: 'officeId' });
   };
 
   return Office;

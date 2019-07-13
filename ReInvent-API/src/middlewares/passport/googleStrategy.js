@@ -41,18 +41,18 @@ export const initGoogleStrategy = passport => passport.use(
               firstName: given_name,
               gender: 'other',
               lastName: family_name,
-              officeId: pickRandomItem([1, 2, 3, 4]),
               role: mockRole
             },
             transaction
           }).spread((userResult, created) => {
-            const userDetails = userResult.get({ plain: true });
             if (!created && !userResult.id) {
               done(null, false, {
                 message:
-                  'An error occured while setting up your account'
+                'An error occured while setting up your account'
               });
             }
+            !userResult.officeId && userResult.setOffice(pickRandomItem([1, 2, 3, 4]));
+            const userDetails = userResult.get({ plain: true });
             return done(null, {
               userDetails,
               accessToken,

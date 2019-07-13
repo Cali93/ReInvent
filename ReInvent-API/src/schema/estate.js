@@ -35,5 +35,6 @@ export default gql`
     name: String
     cover: String
     estateId: Int!
+    officeId: Int
   }
 `;
