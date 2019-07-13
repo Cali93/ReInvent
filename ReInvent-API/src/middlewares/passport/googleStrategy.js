@@ -23,7 +23,7 @@ export const initGoogleStrategy = passport => passport.use(
       } else {
         const { Op } = Sequelize;
         let mockRole = 'user';
-        if (email.includes('project.owner@email.dev')) {
+        if (email === process.env.PROJECT_OWNER_EMAIL) {
           mockRole = 'admin';
         }
         if (email.includes('manager')) {
