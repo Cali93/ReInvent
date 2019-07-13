@@ -8,7 +8,6 @@ export const TextFieldGroup = ({
   placeholder,
   name,
   type,
-  hasError,
   disabled,
   required,
   form,
@@ -31,6 +30,7 @@ export const TextFieldGroup = ({
         className={className}
         placeholder={placeholder}
         margin='normal'
+        disabled={disabled}
         type={type}
         hidden={hidden}
         error={error && touched}
@@ -52,11 +52,14 @@ TextFieldGroup.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
+  form: PropTypes.object,
+  field: PropTypes.object,
   value: PropTypes.string,
   error: PropTypes.string,
   type: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  disabled: PropTypes.string
+  disabled: PropTypes.bool,
+  required: PropTypes.bool
 };
 
 TextFieldGroup.defaultProps = {

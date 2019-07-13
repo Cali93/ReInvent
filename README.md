@@ -16,7 +16,7 @@ You'll need to:
 ### Running the project on development 
 1. `cd` inside ReInvent-API & ReInvent-FRONT and run `yarn install` inside both directories
 2. Inside the API, create a .env file based on the .env.example
-3. Inside the API, run `yarn db:seed:all` to populate the db with mocked data
+3. Inside the API, run `yarn db:seed` to populate the db with mocked data
 4. run `yarn start:dev` inside ReInvent-API
 5. check [your GraphQL API Playground explorer](http://localhost:5000/graphql), your api should be running
 6. run `yarn start` inside ReInvent-FRONT

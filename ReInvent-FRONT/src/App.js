@@ -17,7 +17,8 @@ const App = () => {
     return <div />;
   }
   if (data.getUser && data.getUser.user && data.getUser.user.id) {
-    setUser(data.getUser.user);
+    const { __typename, ...userData } = data.getUser.user;
+    setUser(userData);
   }
 
   return (

@@ -1,6 +1,7 @@
 import { formatErrors } from '../utils/format-errors';
 import bcrypt from 'bcryptjs';
 import { v4 } from 'uuid';
+import { pickRandomItem } from '../utils/helpers';
 
 export default {
   Query: {
@@ -43,6 +44,7 @@ export default {
     register: async (_parent, { input }, { models }) => {
       try {
         const user = await models.User.create(input).then(userRes => {
+          userRes.setOffice(pickRandomItem([1, 2, 3, 4]));
           const { password, ...userInfos } = userRes.get({ plain: true });
           return userInfos;
         });

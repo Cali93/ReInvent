@@ -16,9 +16,12 @@ import { styles } from './auth.styles';
 import { TextFieldGroup } from '../common/TextFieldGroup/TextFieldGroup';
 import { LOGIN_USER } from '../../graphql/auth';
 import { isEmptyObject } from '../../utils/helpers';
+import { useStoreActions } from 'easy-peasy';
 
 const Login = ({ classes, history }) => {
   const [authError, setAuthError] = useState(false);
+  const setUser = useStoreActions(actions => actions.user.setUser);
+
   const validateFields = Yup.object().shape({
     email: Yup.string()
       .email('Email is invalid')
@@ -45,6 +48,8 @@ const Login = ({ classes, history }) => {
         }
 
         if (isLoginOk && data.login.user.id) {
+          const { __typename, ...userData } = data.login.user;
+          setUser(userData);
           return history.push('/app/estates');
         }
       } catch (err) {
