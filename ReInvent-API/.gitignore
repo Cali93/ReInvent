@@ -1,6 +1,6 @@
 .env
 .env.local
-pgdata
+database/pgdata
 node_modules
 docker-compose.yml
 src/config/config.json

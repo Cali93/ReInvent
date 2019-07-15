@@ -34,7 +34,7 @@ export const Register = withStyles(styles)(({ classes, handleTabChange }) => {
       .email('Email is invalid')
       .required('Email is required'),
     password: Yup.string()
-      .min(7, 'Password must be at least 8 characters')
+      .min(8, 'Password must be at least 8 characters')
       .required('Password is required')
   });
 
