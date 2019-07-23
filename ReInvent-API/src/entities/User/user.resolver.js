@@ -1,7 +1,8 @@
-import { formatErrors } from '../utils/format-errors';
 import bcrypt from 'bcryptjs';
 import { v4 } from 'uuid';
-import { pickRandomItem } from '../utils/helpers';
+import { API_CONFIG } from 'config';
+import { formatErrors } from '../../utils/format-errors';
+import { pickRandomItem } from '../../utils/helpers';
 
 export default {
   Query: {
@@ -147,7 +148,7 @@ export default {
             console.log(err);
             reject({ ok: false });
           }
-          res.clearCookie('session_id');
+          res.clearCookie(API_CONFIG.session.name);
           return resolve({ ok: true });
         })
       );

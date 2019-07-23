@@ -1,10 +1,10 @@
 import Sequelize from 'sequelize';
-import { db } from '../../ressources/db';
+import { db } from './db';
 
 const models = {
-  User: db.import('./User'),
-  Office: db.import('./Office'),
-  Estate: db.import('./Estate')
+  User: db.import('../entities/User/User.model.js'),
+  Office: db.import('../entities/Office/Office.model.js'),
+  Estate: db.import('../entities/Estate/Estate.model.js')
 };
 
 Object.keys(models).forEach(modelName => {

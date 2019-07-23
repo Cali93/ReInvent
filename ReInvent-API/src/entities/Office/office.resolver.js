@@ -1,4 +1,4 @@
-import { formatErrors } from '../utils/format-errors';
+import { formatErrors } from '../../utils/format-errors';
 import Sequelize from 'sequelize';
 const { Op } = Sequelize;
 

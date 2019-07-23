@@ -4,7 +4,8 @@ module.exports = {
   API_CONFIG: {
     api: {
       port: process.env.PORT,
-      projectOwnerEmail: process.env.PROJECT_OWNER_EMAIL
+      projectOwnerEmail: process.env.PROJECT_OWNER_EMAIL,
+      competitorsDomain: 'competitor.com'
     },
     app: {
       url: process.env.REACT_APP_URL

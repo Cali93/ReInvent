@@ -1,5 +1,4 @@
 import dotenv from 'dotenv-safe';
-import { API_CONFIG } from 'config';
 import {
   ApolloServer,
   makeExecutableSchema,
@@ -8,6 +7,7 @@ import {
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 import { GraphQLError } from 'graphql';
 import { applyMiddleware } from 'graphql-middleware';
+import cors from 'cors';
 import express from 'express';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
@@ -15,15 +15,15 @@ import passport from 'passport';
 import helmet from 'helmet';
 import { v4 } from 'uuid';
 import path from 'path';
-import { redis } from './utils/redis';
-import models from './models/sequelize';
+import { API_CONFIG } from 'config';
+import { redis } from './ressources/redis';
+import models from './ressources/models';
 import { initGoogleStrategy } from './middlewares/passport/googleStrategy';
 import { permissions } from './middlewares/guards/permissions';
 dotenv.config();
 
 const main = async () => {
   const app = express();
-  app.use(helmet());
 
   const port = API_CONFIG.api.port;
   const corsOptions = {
@@ -31,12 +31,10 @@ const main = async () => {
     origin: API_CONFIG.app.url
   };
 
-  const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schema')));
-  const resolvers = mergeResolvers(
-    fileLoader(path.join(__dirname, './resolvers'))
-  );
-
   const RedisStore = connectRedis(session);
+
+  app.use(helmet());
+  app.use(cors(corsOptions));
 
   app.use(
     session({
@@ -84,6 +82,14 @@ const main = async () => {
     }
   );
 
+  const typeDefs = mergeTypes(
+    fileLoader(path.join(__dirname, '/entities/**/*.schema.js')),
+    { all: true }
+  );
+  const resolvers = mergeResolvers(
+    fileLoader(path.join(__dirname, '/entities/**/*.resolver.js'))
+  );
+
   const schema = applyMiddleware(
     makeExecutableSchema({
       typeDefs,
@@ -113,8 +119,8 @@ const main = async () => {
     }
   });
 
-  server.applyMiddleware({ app, cors: corsOptions });
-  // Makes sure the tables exists
+  server.applyMiddleware({ app, cors: false });
+
   await models.db.sync();
 
   app.listen({ port }, () => {

@@ -1,7 +1,6 @@
 import Sequelize from 'sequelize';
-import { or, and } from 'graphql-shield';
+import { or, and, rule, shield } from 'graphql-shield';
 const { Op } = Sequelize;
-const { rule, shield } = require('graphql-shield');
 
 const isAuthenticated = rule()(async (parent, args, { models, req }, info) => {
   if (req.session && req.session.userId) {

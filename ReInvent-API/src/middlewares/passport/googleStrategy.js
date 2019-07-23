@@ -1,6 +1,6 @@
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import Sequelize from 'sequelize';
-import models from '../../models/sequelize';
+import models from '../../ressources/models';
 import { pickRandomItem } from '../../utils/helpers';
 import { API_CONFIG } from 'config';
 // Use the GoogleStrategy within Passport.
@@ -16,7 +16,7 @@ export const initGoogleStrategy = passport => passport.use(
     },
     (accessToken, refreshToken, profile, done) => {
       const { given_name, family_name, picture, email } = profile._json;
-      if (email.includes('@competitor.')) {
+      if (email.includes(API_CONFIG.api.competitorsDomain)) {
         return done(null, false, {
           message: 'Competitors are not authorized to access the ReInvent platform'
         });
