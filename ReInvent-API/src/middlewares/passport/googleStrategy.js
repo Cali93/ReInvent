@@ -2,7 +2,7 @@ import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import Sequelize from 'sequelize';
 import models from '../../models/sequelize';
 import { pickRandomItem } from '../../utils/helpers';
-
+import { API_CONFIG } from 'config';
 // Use the GoogleStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
 //   credentials (in this case, an accessToken, refreshToken, and Google
@@ -10,8 +10,8 @@ import { pickRandomItem } from '../../utils/helpers';
 export const initGoogleStrategy = passport => passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientID: API_CONFIG.oauth.google.clientId,
+      clientSecret: API_CONFIG.oauth.google.clientSecret,
       callbackURL: 'http://localhost:5000/oauth/google'
     },
     (accessToken, refreshToken, profile, done) => {
@@ -23,7 +23,7 @@ export const initGoogleStrategy = passport => passport.use(
       } else {
         const { Op } = Sequelize;
         let mockRole = 'user';
-        if (email === process.env.PROJECT_OWNER_EMAIL) {
+        if (email === API_CONFIG.api.projectOwnerEmail) {
           mockRole = 'admin';
         }
         if (email.includes('manager')) {

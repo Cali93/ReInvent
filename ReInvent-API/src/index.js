@@ -1,4 +1,5 @@
 import dotenv from 'dotenv-safe';
+import { API_CONFIG } from 'config';
 import {
   ApolloServer,
   makeExecutableSchema,
@@ -15,7 +16,6 @@ import helmet from 'helmet';
 import { v4 } from 'uuid';
 import path from 'path';
 import { redis } from './utils/redis';
-import { corsWhiteList } from './utils/corsOrigins';
 import models from './models/sequelize';
 import { initGoogleStrategy } from './middlewares/passport/googleStrategy';
 import { permissions } from './middlewares/guards/permissions';
@@ -25,10 +25,10 @@ const main = async () => {
   const app = express();
   app.use(helmet());
 
-  const port = process.env.PORT;
+  const port = API_CONFIG.api.port;
   const corsOptions = {
     credentials: true,
-    origin: corsWhiteList
+    origin: API_CONFIG.app.url
   };
 
   const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schema')));
@@ -43,15 +43,7 @@ const main = async () => {
       store: new RedisStore({
         client: redis
       }),
-      name: 'session_id',
-      secret: process.env.COOKIE_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        httpOnly: true,
-        // secure: process.env.NODE_ENV === 'production',
-        maxAge: 144 * 60 * 60 * 1000 // 6 days
-      }
+      ...API_CONFIG.sessionOptions
     })
   );
 
@@ -76,7 +68,10 @@ const main = async () => {
 
   app.get(
     '/oauth/google',
-    passport.authenticate('google', { session: false, failureRedirect: 'http://localhost:3000/authenticate' }),
+    passport.authenticate('google', {
+      session: false,
+      failureRedirect: 'http://localhost:3000/authenticate'
+    }),
     (req, res, next) => {
       if (req.user.userDetails.id && req.session) {
         req.session.userId = req.user.userDetails.id;

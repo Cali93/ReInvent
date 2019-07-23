@@ -29,6 +29,7 @@
     "aws-sdk": "^2.453.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "config": "^3.2.2",
     "connect-redis": "^3.4.1",
     "cors": "^2.8.4",
     "dotenv-safe": "^6.1.0",
