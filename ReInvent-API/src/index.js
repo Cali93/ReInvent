@@ -4,11 +4,13 @@ import {
   makeExecutableSchema,
   ApolloError
 } from 'apollo-server-express';
+import cors from 'cors';
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 import { GraphQLError } from 'graphql';
 import express from 'express';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
+import { applyMiddleware } from 'graphql-middleware';
 import passport from 'passport';
 import { v4 } from 'uuid';
 import path from 'path';
@@ -17,7 +19,6 @@ import { corsWhiteList } from './utils/corsOrigins';
 import models from './models/sequelize';
 import { initGoogleStrategy } from './middlewares/passport/googleStrategy';
 import { permissions } from './middlewares/guards/permissions';
-import { applyMiddleware } from 'graphql-middleware';
 dotenv.config();
 
 const main = async () => {
@@ -27,13 +28,9 @@ const main = async () => {
     credentials: true,
     origin: corsWhiteList
   };
-
-  const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schema')));
-  const resolvers = mergeResolvers(
-    fileLoader(path.join(__dirname, './resolvers'))
-  );
-
   const RedisStore = connectRedis(session);
+
+  app.use(cors(corsOptions));
 
   app.use(
     session({
@@ -55,11 +52,11 @@ const main = async () => {
   await initGoogleStrategy(passport);
   app.use(passport.initialize());
 
-  // GET /auth/google
-  //   Use passport.authenticate() as route middleware to authenticate the
-  //   request.  The first step in Google authentication will involve
-  //   redirecting the user to google.com.  After authorization, Google
-  //   will redirect the user back to this application at /oauth/google
+  // @GET /auth/google
+  // Use passport.authenticate() as route middleware to authenticate the
+  // request.  The first step in Google authentication will involve
+  // redirecting the user to google.com.  After authorization, Google
+  // will redirect the user back to this application at /oauth/google
   app.get(
     '/auth/google',
     passport.authenticate('google', {
@@ -84,6 +81,11 @@ const main = async () => {
         next();
       }
     }
+  );
+
+  const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schema')));
+  const resolvers = mergeResolvers(
+    fileLoader(path.join(__dirname, './resolvers'))
   );
 
   const schema = applyMiddleware(
@@ -115,7 +117,24 @@ const main = async () => {
     }
   });
 
-  server.applyMiddleware({ app, cors: corsOptions });
+  server.applyMiddleware({ app, cors: false });
+
+  // Throw an error if requesting for an unexisting route
+  app.use((req, _res, next) => {
+    const error = new Error('Not found');
+    error.status = 404;
+    next(error);
+  });
+
+  // Handle errors
+  app.use((error, _req, res, next) => {
+    res.status(error.status || 500).json({
+      error: {
+        message: error.message
+      }
+    });
+  });
+
   // Makes sure the tables exists
   await models.db.sync();
 
@@ -124,4 +143,4 @@ const main = async () => {
   });
 };
 
-main().catch(err => console.error(err));
+main().catch(console.error);

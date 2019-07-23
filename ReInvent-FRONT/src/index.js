@@ -1,41 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { StoreProvider } from 'easy-peasy';
-import { ApolloClient } from 'apollo-client';
-import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
-import { ApolloProvider } from 'react-apollo';
-import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import './index.css';
+import { AppRegistry } from 'react-native';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { store } from './store';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import themes, { overrides } from './themes';
 
-const theme = createMuiTheme({ ...themes.default, ...overrides });
+// register the app
+AppRegistry.registerComponent('App', () => App);
 
-const cache = new InMemoryCache();
-
-const client = new ApolloClient({
-  link: createHttpLink({
-    uri: 'http://localhost:5000/graphql',
-    credentials: 'include'
-  }),
-  cache
+AppRegistry.runApplication('App', {
+  initialProps: {},
+  rootTag: document.getElementById('root')
 });
-ReactDOM.render(
-  <ApolloProvider client={client}>
-    <ApolloHooksProvider client={client}>
-      <StoreProvider store={store}>
-        <MuiThemeProvider theme={theme}>
-          <App />
-        </MuiThemeProvider>
-      </StoreProvider>
-    </ApolloHooksProvider>
-  </ApolloProvider>,
-  document.getElementById('root')
-);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
