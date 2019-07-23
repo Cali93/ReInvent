@@ -37,6 +37,7 @@
     "graphql": "^14.0.2",
     "graphql-middleware": "^3.0.2",
     "graphql-shield": "^6.0.3",
+    "helmet": "^3.19.0",
     "ioredis": "^4.9.0",
     "jsonwebtoken": "^8.3.0",
     "merge-graphql-schemas": "^1.5.7",

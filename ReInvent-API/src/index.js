@@ -6,10 +6,12 @@ import {
 } from 'apollo-server-express';
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 import { GraphQLError } from 'graphql';
+import { applyMiddleware } from 'graphql-middleware';
 import express from 'express';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
 import passport from 'passport';
+import helmet from 'helmet';
 import { v4 } from 'uuid';
 import path from 'path';
 import { redis } from './utils/redis';
@@ -17,11 +19,12 @@ import { corsWhiteList } from './utils/corsOrigins';
 import models from './models/sequelize';
 import { initGoogleStrategy } from './middlewares/passport/googleStrategy';
 import { permissions } from './middlewares/guards/permissions';
-import { applyMiddleware } from 'graphql-middleware';
 dotenv.config();
 
 const main = async () => {
   const app = express();
+  app.use(helmet());
+
   const port = process.env.PORT;
   const corsOptions = {
     credentials: true,
