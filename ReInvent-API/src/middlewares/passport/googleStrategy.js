@@ -7,7 +7,7 @@ import { API_CONFIG } from 'config';
 //   Strategies in Passport require a `verify` function, which accept
 //   credentials (in this case, an accessToken, refreshToken, and Google
 //   profile), and invoke a callback with a user object.
-export const initGoogleStrategy = passport => passport.use(
+export const initGoogleStrategy = async passport => passport.use(
   new GoogleStrategy(
     {
       clientID: API_CONFIG.oauth.google.clientId,

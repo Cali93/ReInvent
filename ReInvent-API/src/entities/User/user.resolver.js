@@ -10,7 +10,11 @@ export default {
       try {
         const user = await models.User.scope('withoutPassword').findOne(
           {
-            where: { id: req.session.userId },
+            where: {
+              id: {
+                [models.Op.eq]: req.session.userId
+              }
+            },
             raw: true
           }
         );
@@ -33,7 +37,9 @@ export default {
     }),
     allUsersByOfficeId: (parent, { officeId }, { models }) => models.User.findAll({
       where: {
-        office_id: officeId
+        office_id: {
+          [models.Op.eq]: officeId
+        }
       },
       raw: true,
       order: [
@@ -83,7 +89,7 @@ export default {
         const { userId, ...newData } = input;
         await models.User.update(
           { ...newData },
-          { where: { id: userId } }
+          { where: { id: { [models.Op.eq]: userId } } }
         );
         return {
           ok: true
@@ -98,7 +104,7 @@ export default {
     login: async (_parent, { email, password }, { models, req }) => {
       try {
         const user = await models.User.findOne({
-          where: { email },
+          where: { email: { [models.Op.eq]: email } },
           raw: true
         });
 
@@ -107,7 +113,7 @@ export default {
             ok: false,
             errors: [
               {
-                path: 'authenticate',
+                path: '/authorization',
                 message: 'Wrong credentials'
               }
             ]
@@ -121,7 +127,7 @@ export default {
             ok: false,
             errors: [
               {
-                path: 'authenticate',
+                path: '/authorization',
                 message: 'Wrong credentials'
               }
             ]
@@ -148,7 +154,7 @@ export default {
             console.log(err);
             reject({ ok: false });
           }
-          res.clearCookie(API_CONFIG.session.name);
+          res.clearCookie(API_CONFIG.sessionOptions.name);
           return resolve({ ok: true });
         })
       );

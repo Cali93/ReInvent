@@ -24,17 +24,11 @@ dotenv.config();
 
 const main = async () => {
   const app = express();
-
   const port = API_CONFIG.api.port;
-  const corsOptions = {
-    credentials: true,
-    origin: API_CONFIG.app.url
-  };
-
   const RedisStore = connectRedis(session);
 
   app.use(helmet());
-  app.use(cors(corsOptions));
+  app.use(cors(API_CONFIG.api.corsOptions));
 
   app.use(
     session({
@@ -87,7 +81,8 @@ const main = async () => {
     { all: true }
   );
   const resolvers = mergeResolvers(
-    fileLoader(path.join(__dirname, '/entities/**/*.resolver.js'))
+    fileLoader(path.join(__dirname, '/entities/**/*.resolver.js')),
+    { all: true }
   );
 
   const schema = applyMiddleware(
@@ -113,7 +108,7 @@ const main = async () => {
       }
 
       const errId = v4();
-      console.log({ errId, error });
+      console.log({ errId, error: JSON.stringify(error) });
 
       return new GraphQLError(`Internal Error: ${errId}`);
     }
@@ -121,10 +116,26 @@ const main = async () => {
 
   server.applyMiddleware({ app, cors: false });
 
+  // Throw an error if requesting for an unexisting route
+  app.use((_req, _res, next) => {
+    const error = new Error('Not found');
+    error.status = 404;
+    next(error);
+  });
+
+  // Handle errors
+  app.use((error, _req, res, next) => {
+    res.status(error.status || 500).json({
+      error: {
+        message: error.message
+      }
+    });
+  });
+
   await models.db.sync();
 
   app.listen({ port }, () => {
-    console.log(`🚀 Server ready on port: ${port} 🚀`);
+    console.log(`🚀 Server ready on: http://localhost:${port}/graphql 🚀`);
   });
 };
 

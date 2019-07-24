@@ -68,27 +68,36 @@ const Login = ({ classes, history }) => {
           }}
           validationSchema={validateFields}
           onSubmit={fields => onSubmit(fields, login)}
-          render={({
-            errors,
-            touched,
-            handleSubmit
-          }) => (
+          render={({ errors, touched, handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
               <Typography variant='h3' className={classes.tabContentTitle}>
-              Access your account
+                Access your account
               </Typography>
-              <Button size='large' className={classes.googleButton} href='http://localhost:5000/auth/google'>
-                <img src={google} alt='google' className={classes.googleIcon} />
-              &nbsp;Sign in with Google
+              <Button
+                size='large'
+                className={classes.googleButton}
+                href={`${process.env.REACT_APP_API_URL}/auth/google`}
+              >
+                <img
+                  src={google}
+                  alt='google'
+                  className={classes.googleIcon}
+                />
+                &nbsp;Sign in with Google
               </Button>
               <div className={classes.formDividerContainer}>
                 <div className={classes.formDivider} />
-                <Typography className={classes.formDividerWord}>or</Typography>
+                <Typography className={classes.formDividerWord}>
+                  or
+                </Typography>
                 <div className={classes.formDivider} />
               </div>
               {authError && (
                 <Fade in={authError}>
-                  <Typography color='secondary' className={classes.errorMessage}>
+                  <Typography
+                    color='secondary'
+                    className={classes.errorMessage}
+                  >
                     Something is wrong with your credentials :(
                   </Typography>
                 </Fade>
@@ -121,7 +130,10 @@ const Login = ({ classes, history }) => {
               />
               <div className={classes.formButtons}>
                 {loading ? (
-                  <CircularProgress size={26} className={classes.loginLoader} />
+                  <CircularProgress
+                    size={26}
+                    className={classes.loginLoader}
+                  />
                 ) : (
                   <Button
                     disabled={!isEmptyObject(errors)}
@@ -131,7 +143,7 @@ const Login = ({ classes, history }) => {
                     color='primary'
                     size='large'
                   >
-                Login
+                    Login
                   </Button>
                 )}
                 <Button

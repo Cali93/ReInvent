@@ -1,11 +1,18 @@
+'use strict';
 require('dotenv-safe').config();
-
+const defer = require('config/defer').deferConfig;
 module.exports = {
   API_CONFIG: {
     api: {
       port: process.env.PORT,
       projectOwnerEmail: process.env.PROJECT_OWNER_EMAIL,
-      competitorsDomain: 'competitor.com'
+      competitorsDomain: 'competitor.com',
+      corsOptions: {
+        credentials: true,
+        origin: defer(function () {
+          return this.API_CONFIG.app.url;
+        })
+      }
     },
     app: {
       url: process.env.REACT_APP_URL

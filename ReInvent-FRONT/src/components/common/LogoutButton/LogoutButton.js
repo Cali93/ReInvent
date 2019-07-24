@@ -8,9 +8,9 @@ const LogoutButton = () => {
   const logoutUser = useStoreActions(actions => actions.user.logout);
 
   const handleLogout = async (logout) => {
-    await logoutUser();
-    await logout();
-    return window.location.reload();
+    return logoutUser(logout);
+    // return logout();
+    // return ;
   };
 
   return (

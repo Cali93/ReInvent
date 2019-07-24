@@ -6,7 +6,9 @@ export const user = {
     state.user = loginResponse;
     return state;
   }),
-  logout: action((state, loginResponse) => {
+  logout: action((state, logoutMutation) => {
+    logoutMutation();
+    window.location.replace('/authenticate');
     state.user = {};
     return state;
   }),
