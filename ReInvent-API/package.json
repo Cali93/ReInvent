@@ -37,7 +37,7 @@
     "express-session": "^1.15.6",
     "graphql": "^14.0.2",
     "graphql-middleware": "^3.0.2",
-    "graphql-shield": "^6.0.3",
+    "graphql-shield": "^6.0.6",
     "helmet": "^3.19.0",
     "ioredis": "^4.9.0",
     "jsonwebtoken": "^8.3.0",
