@@ -24,7 +24,7 @@
     "sequelize-cli": "^5.5.0"
   },
   "dependencies": {
-    "apollo-server": "^2.1.0",
+    "apollo-server": "^2.25.3",
     "apollo-server-express": "^2.1.0",
     "aws-sdk": "^2.453.0",
     "bcryptjs": "^2.4.3",
