@@ -40,7 +40,7 @@
     "graphql-shield": "^6.0.3",
     "helmet": "^3.19.0",
     "ioredis": "^4.9.0",
-    "jsonwebtoken": "^8.3.0",
+    "jsonwebtoken": "^9.0.0",
     "merge-graphql-schemas": "^1.5.7",
     "passport": "^0.4.0",
     "passport-google-oauth": "^2.0.0",
